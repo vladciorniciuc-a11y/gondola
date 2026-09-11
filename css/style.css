@@ -1,0 +1,62 @@
+/* Modern warm Italian typography & smooth details */
+body {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Custom soft scrollbar */
+@layer utilities {
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #FDF7F2;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #EED9CC;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #C82333;
+    }
+}
+
+.video-box {
+    box-shadow: 0 10px 30px -10px rgba(30, 27, 24, 0.2);
+}
+
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    border-color: #E2BFAB;
+    box-shadow: 0 20px 40px -12px rgba(200, 35, 51, 0.12);
+}
+
+/* Precise styling for Gram Preset Buttons */
+.gram-btn {
+    transition: all 0.15s ease-in-out;
+}
+
+/* INACTIVE button state inside card */
+.gram-btn:not(.active) {
+    background-color: #FFFFFF !important;
+    border-color: #EED9CC !important;
+    color: #6B625B !important;
+}
+
+.gram-btn:not(.active):hover {
+    border-color: #C82333 !important;
+    color: #C82333 !important;
+}
+
+/* ACTIVE button state: only ONE button gets this class */
+.gram-btn.active {
+    background-color: #C82333 !important;
+    border-color: #C82333 !important;
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 12px rgba(200, 35, 51, 0.3) !important;
+}
