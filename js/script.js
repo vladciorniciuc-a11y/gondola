@@ -12,7 +12,7 @@ const pizzas = [
         name: "Pizza de post",
         badge: "Post / Vegetarian",
         ingredients: "Sos de roșii, ciuperci, porumb, legume la cuptor și măsline.",
-        videoPoster: "images/pizza_de_post_poster.jpg",
+        mediaPoster: "images/pizza_de_post_poster.jpg",
         videoSrc: "videos/pizza_de_post_asamblare_opt.mp4"
     },
     {
@@ -20,88 +20,77 @@ const pizzas = [
         name: "Pizza de post cu ton",
         badge: "Post cu Pește",
         ingredients: "Sos de roșii, roșii, porumb, ton, măsline.",
-        videoPoster: "https://images.unsplash.com/photo-1564936281291-294551497d81?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+        mediaPoster: "images/gallery/pizza-sortimente.webp"
     },
     {
         id: 3,
         name: "Pizza Margherita cu șuncă",
         badge: "Clasic & Delicios",
         ingredients: "Sos de roșii, mozzarella și șuncă.",
-        videoPoster: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+        mediaPoster: "images/gallery/pizza-colorata.webp"
     },
     {
         id: 4,
         name: "Pizza Diavola",
         badge: "Spicy / Picant",
         ingredients: "Sos de roșii, mozzarella și salam picant.",
-        videoPoster: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4"
+        mediaPoster: "images/gallery/pizza-colorata.webp"
     },
     {
         id: 5,
         name: "Pizza Capricciosa",
         badge: "Favorit Tradițional",
         ingredients: "Sos de roșii, mozzarella, ciuperci, șuncă, salam și măsline.",
-        videoPoster: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+        mediaPoster: "images/gallery/pizza-sortimente.webp"
     },
     {
         id: 6,
         name: "Pizza 4 Formaggi",
         badge: "Brânzeturi Alese",
         ingredients: "Mozzarella, gorgonzola, brânză afumată și parmezan.",
-        videoPoster: "https://images.unsplash.com/photo-1573821663912-569905455b1c?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+        mediaPoster: "images/gallery/pizza-ripiena.webp"
     },
     {
         id: 7,
         name: "Pizza cu ton",
         badge: "Mediteranean",
         ingredients: "Sos de roșii, mozzarella, roșii și ton.",
-        videoPoster: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4"
+        mediaPoster: "images/gallery/pizza-colorata.webp"
     },
     {
         id: 8,
         name: "Pizza Gondola",
         badge: "Specialitatea Casei",
         ingredients: "Sos de roșii, mozzarella, ciuperci, șuncă, salam, roșii, gogoșari și măsline.",
-        videoPoster: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+        mediaPoster: "images/gallery/pizza-sortimente.webp"
     },
     {
         id: 9,
         name: "Pizza ripiena cu șuncă",
         badge: "Specialitate Umplută",
         ingredients: "Mozzarella și șuncă.",
-        videoPoster: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"
+        mediaPoster: "images/gallery/pizza-ripiena.webp"
     },
     {
         id: 10,
         name: "Pizza Regina",
         badge: "Tradițional Aromat",
         ingredients: "Sos de roșii, mozzarella, ceafă afumată, roșii, porumb și măsline.",
-        videoPoster: "https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4"
+        mediaPoster: "images/gallery/pizza-sortimente.webp"
     },
     {
         id: 11,
         name: "Pizza cu cabanos",
         badge: "Gust Rustic & Bogat",
         ingredients: "Sos de roșii, mozzarella, porumb, ardei, cabanos, măsline.",
-        videoPoster: "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+        mediaPoster: "images/gallery/pizza-colorata.webp"
     },
     {
         id: 12,
         name: "Pizza cu piept de pui",
         badge: "Gust Fin & Nutritiv",
         ingredients: "Sos de roșii, mozzarella, roșii, ardei și piept de pui.",
-        videoPoster: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80",
-        videoSrc: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+        mediaPoster: "images/gallery/pizza-sortimente.webp"
     }
 ];
 
@@ -152,152 +141,185 @@ window.stepSauce = function(name, step) {
     renderModalCart();
 };
 
+const PRODUCT_BATCH_SIZE = 4;
+let renderedProductCount = 0;
+let productRenderObserver = null;
+
+function productMediaMarkup(pizza) {
+    if (pizza.videoSrc) {
+        return `
+            <video class="menu-video w-full h-full object-cover" src="${pizza.videoSrc}" poster="${pizza.mediaPoster}" playsinline muted loop preload="auto" aria-label="Video ${pizza.name}"></video>
+            <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur text-gondola-primary border border-gondola-cardBorder shadow"><i class="fa-solid fa-play text-[10px] mr-1"></i> ${pizza.name}</div>`;
+    }
+
+    return `
+        <img class="w-full h-full object-cover" src="${pizza.mediaPoster}" loading="lazy" decoding="async" alt="${pizza.name}">
+        <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur text-gondola-primary border border-gondola-cardBorder shadow"><i class="fa-solid fa-image text-[10px] mr-1"></i> ${pizza.name}</div>`;
+}
+
+function createProductCard(pizza, index) {
+    const isEven = index % 2 === 1;
+    const grams = selectedGrams[pizza.id];
+    const whole = grams === WHOLE_PIZZA_REFERENCE_GRAMS;
+    const card = document.createElement("div");
+    card.id = `product-${pizza.id}`;
+    card.className = "product-card bg-gondola-cardBg border-2 border-gondola-cardBorder rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 lg:p-10 shadow-xl";
+    card.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+            <div class="w-full min-w-0 lg:col-span-7 ${isEven ? 'lg:order-2' : 'lg:order-1'}">
+                <div class="video-box relative rounded-2xl md:rounded-3xl overflow-hidden bg-slate-900 border-2 border-white/80 aspect-video md:aspect-[16/10] group shadow-xl w-full">
+                    ${productMediaMarkup(pizza)}
+                </div>
+            </div>
+            <div class="w-full min-w-0 lg:col-span-5 flex flex-col justify-between ${isEven ? 'lg:order-1' : 'lg:order-2'} mt-6 lg:mt-0">
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-2"><span class="text-xs font-extrabold uppercase tracking-widest px-3 py-0.5 rounded-full border border-rose-200 bg-white text-gondola-primary shadow-sm">${pizza.badge}</span><span class="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white text-gondola-muted border border-gondola-cardBorder shadow-sm">#${pizza.id}</span></div>
+                    <h3 class="text-2xl md:text-3xl font-black text-gondola-charcoal mb-2 font-display">${pizza.name}</h3>
+                    <p class="text-gondola-muted text-sm md:text-base leading-snug mb-5 font-medium">${pizza.ingredients}</p>
+                </div>
+                <div class="border-t border-gondola-cardBorder/80 pt-4 space-y-3.5">
+                    <div class="flex items-baseline justify-between gap-4">
+                        <div class="text-xs text-gondola-muted font-medium">Preț: <span class="text-gondola-charcoal font-bold">${PRICE_PER_100G.toFixed(2)} LEI / 100g</span></div>
+                        <div class="text-right"><span class="text-[11px] text-gondola-muted block">${whole ? 'Estimativ:' : 'Subtotal:'}</span><span id="subtotal-${pizza.id}" class="text-xl md:text-2xl font-black text-gondola-primary font-display">${whole ? '≈ 64.00 LEI*' : money(estimatedPizzaPrice(grams)) + ' LEI'}</span></div>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-gondola-charcoal mb-1.5 flex justify-between items-center"><span>Alege porția:</span><span id="grams-label-${pizza.id}" class="text-gondola-primary font-black text-sm">${displaySelection(grams)}</span></div>
+                        <div class="grid grid-cols-4 gap-1.5 mb-2.5">
+                            <button type="button" onclick="setGrams(${pizza.id},300)" id="btn-g-${pizza.id}-300" class="gram-btn active py-2 text-xs font-bold rounded-xl border transition shadow-sm">300g</button>
+                            <button type="button" onclick="setGrams(${pizza.id},600)" id="btn-g-${pizza.id}-600" class="gram-btn py-2 text-xs font-bold rounded-xl border transition shadow-sm">600g</button>
+                            <button type="button" onclick="setGrams(${pizza.id},1000)" id="btn-g-${pizza.id}-1000" class="gram-btn py-2 text-xs font-bold rounded-xl border transition shadow-sm">1kg</button>
+                            <button type="button" onclick="setGrams(${pizza.id},1200)" id="btn-g-${pizza.id}-1200" class="gram-btn py-2 text-[11px] font-bold rounded-xl border transition shadow-sm">Întreagă</button>
+                        </div>
+                        <div class="flex items-center justify-between bg-white border border-gondola-cardBorder rounded-xl px-3 py-2 shadow-sm">
+                            <span class="text-[11px] text-gondola-muted font-semibold flex items-center gap-1"><i class="fa-solid fa-scale-balanced text-gondola-accent"></i> Ajustare 100g:</span>
+                            <div class="flex items-center gap-1.5"><button type="button" onclick="stepGrams(${pizza.id},-100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder font-black">−</button><span id="counter-grams-${pizza.id}" class="text-xs font-mono font-bold text-gondola-charcoal min-w-16 text-center">${grams}g</span><button type="button" onclick="stepGrams(${pizza.id},100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-black">+</button></div>
+                        </div>
+                        <p id="whole-note-${pizza.id}" class="${whole ? '' : 'hidden'} mt-2 text-[10px] leading-relaxed text-gondola-muted">* Preț orientativ. Pizza este cântărită, iar prețul final poate varia în funcție de gramajul real (aprox. ±100g).</p>
+                    </div>
+                    <button type="button" onclick="addToCart(${pizza.id}, event)" class="w-full bg-gondola-charcoal hover:bg-gondola-primary text-white font-extrabold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 group shadow-md uppercase font-display tracking-wide text-xs sm:text-sm"><i class="fa-solid fa-cart-plus text-amber-400 group-hover:text-white transition"></i><span>Adaugă în cuptor</span></button>
+                </div>
+            </div>
+        </div>`;
+    return card;
+}
+
+function appendNextProductBatch(container) {
+    const end = Math.min(renderedProductCount + PRODUCT_BATCH_SIZE, pizzas.length);
+    for (let index = renderedProductCount; index < end; index += 1) {
+        const pizza = pizzas[index];
+        const card = createProductCard(pizza, index);
+        container.appendChild(card);
+        setGrams(pizza.id, selectedGrams[pizza.id]);
+    }
+    renderedProductCount = end;
+    return renderedProductCount < pizzas.length;
+}
+
+function addProductSentinel(container) {
+    const sentinel = document.createElement('div');
+    sentinel.id = 'products-load-sentinel';
+    sentinel.className = 'h-px w-full';
+    sentinel.setAttribute('aria-hidden', 'true');
+    container.appendChild(sentinel);
+    productRenderObserver?.observe(sentinel);
+}
+
 function renderProducts() {
     const container = document.getElementById("products-container");
+    if (!container) return;
+
     container.innerHTML = "";
-    pizzas.forEach((pizza, index) => {
-        const isEven = index % 2 === 1;
-        const grams = selectedGrams[pizza.id];
-        const whole = grams === WHOLE_PIZZA_REFERENCE_GRAMS;
-        const card = document.createElement("div");
-        card.id = `product-${pizza.id}`;
-        card.className = "product-card bg-gondola-cardBg border-2 border-gondola-cardBorder rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 lg:p-10 shadow-xl";
-        card.innerHTML = `
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                <div class="w-full min-w-0 lg:col-span-7 ${isEven ? 'lg:order-2' : 'lg:order-1'}">
-                    <div class="video-box relative rounded-2xl md:rounded-3xl overflow-hidden bg-slate-900 border-2 border-white/80 aspect-video md:aspect-[16/10] group shadow-xl w-full">
-                        <video class="menu-video w-full h-full object-cover" poster="${pizza.videoPoster}" playsinline muted loop preload="none" data-src="${pizza.videoSrc}" aria-label="Video ${pizza.name}"></video>
-                        <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur text-gondola-primary border border-gondola-cardBorder shadow"><i class="fa-solid fa-play text-[10px] mr-1"></i> ${pizza.name}</div>
-                    </div>
-                </div>
-                <div class="w-full min-w-0 lg:col-span-5 flex flex-col justify-between ${isEven ? 'lg:order-1' : 'lg:order-2'} mt-6 lg:mt-0">
-                    <div>
-                        <div class="flex items-center justify-between gap-2 mb-2"><span class="text-xs font-extrabold uppercase tracking-widest px-3 py-0.5 rounded-full border border-rose-200 bg-white text-gondola-primary shadow-sm">${pizza.badge}</span><span class="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white text-gondola-muted border border-gondola-cardBorder shadow-sm">#${pizza.id}</span></div>
-                        <h3 class="text-2xl md:text-3xl font-black text-gondola-charcoal mb-2 font-display">${pizza.name}</h3>
-                        <p class="text-gondola-muted text-sm md:text-base leading-snug mb-5 font-medium">${pizza.ingredients}</p>
-                    </div>
-                    <div class="border-t border-gondola-cardBorder/80 pt-4 space-y-3.5">
-                        <div class="flex items-baseline justify-between gap-4">
-                            <div class="text-xs text-gondola-muted font-medium">Preț: <span class="text-gondola-charcoal font-bold">${PRICE_PER_100G.toFixed(2)} LEI / 100g</span></div>
-                            <div class="text-right"><span class="text-[11px] text-gondola-muted block">${whole ? 'Estimativ:' : 'Subtotal:'}</span><span id="subtotal-${pizza.id}" class="text-xl md:text-2xl font-black text-gondola-primary font-display">${whole ? '≈ 64.00 LEI*' : money(estimatedPizzaPrice(grams)) + ' LEI'}</span></div>
-                        </div>
-                        <div>
-                            <div class="text-xs font-bold text-gondola-charcoal mb-1.5 flex justify-between items-center"><span>Alege porția:</span><span id="grams-label-${pizza.id}" class="text-gondola-primary font-black text-sm">${displaySelection(grams)}</span></div>
-                            <div class="grid grid-cols-4 gap-1.5 mb-2.5">
-                                <button type="button" onclick="setGrams(${pizza.id},300)" id="btn-g-${pizza.id}-300" class="gram-btn active py-2 text-xs font-bold rounded-xl border transition shadow-sm">300g</button>
-                                <button type="button" onclick="setGrams(${pizza.id},600)" id="btn-g-${pizza.id}-600" class="gram-btn py-2 text-xs font-bold rounded-xl border transition shadow-sm">600g</button>
-                                <button type="button" onclick="setGrams(${pizza.id},1000)" id="btn-g-${pizza.id}-1000" class="gram-btn py-2 text-xs font-bold rounded-xl border transition shadow-sm">1kg</button>
-                                <button type="button" onclick="setGrams(${pizza.id},1200)" id="btn-g-${pizza.id}-1200" class="gram-btn py-2 text-[11px] font-bold rounded-xl border transition shadow-sm">Întreagă</button>
-                            </div>
-                            <div class="flex items-center justify-between bg-white border border-gondola-cardBorder rounded-xl px-3 py-2 shadow-sm">
-                                <span class="text-[11px] text-gondola-muted font-semibold flex items-center gap-1"><i class="fa-solid fa-scale-balanced text-gondola-accent"></i> Ajustare 100g:</span>
-                                <div class="flex items-center gap-1.5"><button type="button" onclick="stepGrams(${pizza.id},-100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder font-black">−</button><span id="counter-grams-${pizza.id}" class="text-xs font-mono font-bold text-gondola-charcoal min-w-16 text-center">${grams}g</span><button type="button" onclick="stepGrams(${pizza.id},100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-black">+</button></div>
-                            </div>
-                            <p id="whole-note-${pizza.id}" class="${whole ? '' : 'hidden'} mt-2 text-[10px] leading-relaxed text-gondola-muted">* Preț orientativ. Pizza este cântărită, iar prețul final poate varia în funcție de gramajul real (aprox. ±100g).</p>
-                        </div>
-                        <button type="button" onclick="addToCart(${pizza.id}, event)" class="w-full bg-gondola-charcoal hover:bg-gondola-primary text-white font-extrabold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 group shadow-md uppercase font-display tracking-wide text-xs sm:text-sm"><i class="fa-solid fa-cart-plus text-amber-400 group-hover:text-white transition"></i><span>Adaugă în cuptor</span></button>
-                    </div>
-                </div>
-            </div>`;
-        container.appendChild(card);
-        setGrams(pizza.id, grams);
-    });
+    renderedProductCount = 0;
+    if (productRenderObserver) productRenderObserver.disconnect();
+
+    const hasMore = appendNextProductBatch(container);
     initLazyProductVideos();
+
+    if (!hasMore) return;
+
+    if (!('IntersectionObserver' in window)) {
+        while (appendNextProductBatch(container)) {}
+        return;
+    }
+
+    productRenderObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            productRenderObserver.unobserve(entry.target);
+            entry.target.remove();
+            const more = appendNextProductBatch(container);
+            if (more) addProductSentinel(container);
+            else productRenderObserver.disconnect();
+        });
+    }, { rootMargin: '1000px 0px 1000px 0px', threshold: 0 });
+
+    addProductSentinel(container);
 }
 
 /*
  * Performance video produse:
- * - clipurile locale sunt preîncărcate discret înainte de a intra în viewport;
- * - pornesc când devin vizibile și rămân pornite până ies complet din ecran;
- * - NU mai eliminăm/reatașăm src la scroll (asta provoca buffering repetat și freeze);
- * - clipurile demo externe nu pornesc automat la scroll; se încarcă doar la click.
+ * - singurul clip de produs real este local și începe să se preîncarce imediat;
+ * - restul sortimentelor folosesc exclusiv imagini locale, fără Unsplash și fără clipuri demo externe;
+ * - redarea începe doar când clipul este suficient de vizibil și există buffer pentru redare;
+ * - cele 12 carduri sunt adăugate progresiv, câte 4, pentru un DOM inițial mai mic.
  */
 let productVideoObserver = null;
-let productVideoPreloadObserver = null;
 
 function initLazyProductVideos() {
     if (productVideoObserver) productVideoObserver.disconnect();
-    if (productVideoPreloadObserver) productVideoPreloadObserver.disconnect();
 
     const videos = [...document.querySelectorAll('.menu-video')];
     if (!videos.length) return;
 
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const localVideos = videos.filter(video => !/^https?:/i.test(video.dataset.src || ''));
-    const remoteVideos = videos.filter(video => /^https?:/i.test(video.dataset.src || ''));
 
-    const ensureLoaded = video => {
-        if (!video.src && video.dataset.src) {
-            video.src = video.dataset.src;
-            video.preload = 'auto';
-            video.load();
-        }
-    };
+    videos.forEach(video => {
+        video.preload = 'auto';
+        if (video.readyState === 0) video.load();
+    });
 
-    const pauseOtherLocalVideos = active => {
-        localVideos.forEach(video => {
-            if (video !== active && !video.paused) video.pause();
+    const pauseOtherVideos = active => {
+        videos.forEach(video => {
+            if (video !== active) {
+                video.dataset.shouldPlay = '0';
+                if (!video.paused) video.pause();
+            }
         });
     };
 
-    const playLocalVideo = video => {
+    const requestPlay = video => {
         if (reduceMotion) return;
-        ensureLoaded(video);
-        pauseOtherLocalVideos(video);
-        const promise = video.play();
-        if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+        pauseOtherVideos(video);
+        video.dataset.shouldPlay = '1';
+
+        const start = () => {
+            if (video.dataset.shouldPlay !== '1' || document.hidden) return;
+            const promise = video.play();
+            if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+        };
+
+        if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) start();
+        else video.addEventListener('canplay', start, { once: true });
+    };
+
+    const stopVideo = video => {
+        video.dataset.shouldPlay = '0';
+        if (!video.paused) video.pause();
     };
 
     if ('IntersectionObserver' in window) {
-        // Încarcă sursa cu puțin înainte să ajungă în viewport, fără a porni clipul.
-        productVideoPreloadObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    ensureLoaded(entry.target);
-                    productVideoPreloadObserver.unobserve(entry.target);
-                }
-            });
-        }, { rootMargin: '700px 0px 700px 0px', threshold: 0 });
-
-        localVideos.forEach(video => productVideoPreloadObserver.observe(video));
-
-        // Histerezis simplu: pornește de la 15% vizibil, se oprește doar când iese complet.
-        // Astfel nu mai comută play/pause repetat în timpul scroll-ului lent.
         productVideoObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 const video = entry.target;
-                if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
-                    playLocalVideo(video);
-                } else if (!entry.isIntersecting || entry.intersectionRatio <= 0.001) {
-                    if (!video.paused) video.pause();
-                }
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.15) requestPlay(video);
+                else if (!entry.isIntersecting || entry.intersectionRatio <= 0.001) stopVideo(video);
             });
         }, { threshold: [0, 0.15], rootMargin: '0px' });
 
-        localVideos.forEach(video => productVideoObserver.observe(video));
+        videos.forEach(video => productVideoObserver.observe(video));
     } else {
-        // Fallback: primul video local pornește la interacțiune, fără autoplay agresiv.
-        localVideos[0]?.addEventListener('click', () => playLocalVideo(localVideos[0]));
+        videos[0]?.addEventListener('click', () => requestPlay(videos[0]));
     }
-
-    // Sursele externe sunt demo-uri grele. Nu le descărcăm la simplul scroll.
-    // Utilizatorul le poate porni explicit prin click.
-    remoteVideos.forEach(video => {
-        video.style.cursor = 'pointer';
-        video.title = 'Click pentru redare video';
-        video.addEventListener('click', () => {
-            if (!video.src) {
-                ensureLoaded(video);
-                const promise = video.play();
-                if (promise && typeof promise.catch === 'function') promise.catch(() => {});
-            } else if (video.paused) {
-                const promise = video.play();
-                if (promise && typeof promise.catch === 'function') promise.catch(() => {});
-            } else {
-                video.pause();
-            }
-        });
-    });
 }
 
 let heroVideoIsVisible = true;
