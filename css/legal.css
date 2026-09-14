@@ -1,0 +1,31 @@
+:root{
+  --bg:#fdf7f2;--card:#fff;--warm:#fff0e5;--border:#eed9cc;--red:#c82333;--red-dark:#a71d2a;
+  --gold:#d97706;--ink:#1e1b18;--muted:#6b625b;--green:#16845b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.7}
+a{color:var(--red);text-decoration:none}a:hover{text-decoration:underline}
+.legal-top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.legal-top-inner{max-width:1120px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-weight:900;letter-spacing:-.03em;font-size:20px;color:var(--ink)}
+.back-home{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink);font-weight:800;font-size:13px}
+.legal-wrap{max-width:980px;margin:0 auto;padding:54px 20px 80px}
+.legal-hero{margin-bottom:30px}.eyebrow{display:inline-block;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--red);background:#fff0f1;border:1px solid #f5c9ce;padding:6px 10px;border-radius:999px}
+h1{font-size:clamp(34px,6vw,56px);line-height:1.05;letter-spacing:-.045em;margin:14px 0 14px;font-weight:950}h2{font-size:24px;line-height:1.2;letter-spacing:-.025em;margin:0 0 12px;font-weight:900}h3{font-size:17px;margin:22px 0 8px;font-weight:900}
+.lead{font-size:18px;color:var(--muted);max-width:760px}.updated{font-size:12px;color:var(--muted);margin-top:12px}
+.legal-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:26px;margin:18px 0;box-shadow:0 14px 35px rgba(46,29,17,.05)}
+.legal-card p:first-child{margin-top:0}.legal-card p:last-child{margin-bottom:0}
+ul,ol{padding-left:22px}.note{border-left:4px solid var(--gold);background:#fff8e8;padding:16px 18px;border-radius:12px;color:#5e4a24}.warning{border-left-color:var(--red);background:#fff0f1;color:#6f232b}.ok{border-left-color:var(--green);background:#edf9f4;color:#164f3c}
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.data-item{border:1px solid var(--border);background:var(--bg);padding:13px 14px;border-radius:14px}.data-item small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}.data-item strong{display:block;margin-top:3px}
+.placeholder{color:var(--red);font-weight:900;background:#fff0f1;border:1px dashed #e68c96;padding:2px 7px;border-radius:7px}
+.legal-footer{border-top:1px solid var(--border);background:#fff;padding:30px 20px;text-align:center;font-size:12px;color:var(--muted)}.legal-footer nav{display:flex;justify-content:center;flex-wrap:wrap;gap:12px 18px;margin-bottom:12px}.legal-footer nav a{font-weight:800;color:var(--ink)}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:16px}.legal-table{width:100%;border-collapse:collapse;background:#fff;font-size:14px}.legal-table th,.legal-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;text-align:left}.legal-table th{background:var(--warm);font-size:12px;text-transform:uppercase;letter-spacing:.05em}.legal-table tr:last-child td{border-bottom:0}
+.action-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:#fff!important;padding:11px 16px;border-radius:12px;font-weight:900;text-decoration:none!important}.action-link:hover{background:var(--red-dark)}
+@media(max-width:680px){.data-grid{grid-template-columns:1fr}.legal-wrap{padding-top:36px}.legal-card{padding:20px}.legal-top-inner{padding:11px 14px}.brand{font-size:17px}}
+
+/* Cookie UI shared by homepage + legal pages */
+.cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:1000;max-width:980px;margin:auto;background:#fff;border:1px solid var(--border);box-shadow:0 20px 60px rgba(30,27,24,.2);border-radius:20px;padding:18px;display:none}.cookie-banner.is-visible{display:block}.cookie-banner-inner{display:flex;align-items:center;gap:18px;justify-content:space-between}.cookie-copy{font-size:13px;color:var(--muted);max-width:610px}.cookie-copy strong{display:block;color:var(--ink);font-size:15px;margin-bottom:3px}.cookie-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.cookie-btn{border:1px solid var(--border);background:#fff;color:var(--ink);border-radius:11px;padding:9px 12px;font:inherit;font-size:12px;font-weight:850;cursor:pointer}.cookie-btn.primary{background:var(--red);border-color:var(--red);color:#fff}.cookie-btn:hover{transform:translateY(-1px)}
+.cookie-modal{position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,.58);display:none;align-items:center;justify-content:center;padding:18px}.cookie-modal.is-visible{display:flex}.cookie-panel{width:min(560px,100%);background:#fff;border-radius:22px;border:1px solid var(--border);padding:22px;box-shadow:0 25px 70px rgba(0,0,0,.3)}.cookie-panel h2{font-size:22px}.cookie-setting{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--border)}.cookie-setting p{margin:2px 0 0;color:var(--muted);font-size:12px}.cookie-switch{width:44px;height:24px;accent-color:var(--red);flex:0 0 auto}.cookie-panel-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+.external-media-placeholder{position:absolute;inset:0;background:linear-gradient(145deg,#fff0e5,#fdf7f2);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:2}.external-media-placeholder.is-hidden{display:none}.external-media-placeholder .inner{max-width:390px}.external-media-placeholder strong{display:block;font-size:17px;margin-bottom:7px}.external-media-placeholder p{font-size:12px;color:var(--muted);margin:0 0 12px}.external-media-placeholder button{border:0;background:var(--red);color:#fff;font-weight:900;padding:10px 14px;border-radius:11px;cursor:pointer}
+@media(max-width:720px){.cookie-banner-inner{align-items:flex-start;flex-direction:column}.cookie-actions{justify-content:flex-start}}
