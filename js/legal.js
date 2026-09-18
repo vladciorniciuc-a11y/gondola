@@ -94,9 +94,10 @@
     modal.className = 'cookie-modal';
     modal.setAttribute('role','dialog');
     modal.setAttribute('aria-modal','true');
+    modal.setAttribute('aria-labelledby','cookie-modal-title');
     modal.innerHTML = `
       <div class="cookie-panel">
-        <h2>Preferințe cookies & conținut extern</h2>
+        <h2 id="cookie-modal-title">Preferințe cookies & conținut extern</h2>
         <p style="font-size:13px;color:#6b625b;margin-top:-4px">Poți modifica alegerea oricând din linkul „Setări cookies” din footer.</p>
         <div class="cookie-setting">
           <div><strong>Necesare</strong><p>Stocare locală și cookie propriu pentru reținerea preferinței de confidențialitate. Mereu active.</p></div>

@@ -17,7 +17,7 @@ const pizzas = [
         ingredients: "Sos de roșii, ardei, dovlecel, ciuperci, porumb, roșii și măsline.",
         allergens: "Gluten",
         nutritionAnchor: "pizza-de-post",
-        videoPoster: "images/posters/pizza_post.jpg",
+        videoPoster: "images/posters/pizza_post.webp",
         videoSrc: "videos/pizza_post.mp4"
     },
     {
@@ -27,7 +27,7 @@ const pizzas = [
         ingredients: "Sos de roșii, roșii proaspete, porumb, ton și măsline.",
         allergens: "Gluten, Pește",
         nutritionAnchor: "pizza-de-post-cu-ton",
-        videoPoster: "images/posters/pizza_post_ton.jpg",
+        videoPoster: "images/posters/pizza_post_ton.webp",
         videoSrc: "videos/pizza_post_ton.mp4"
     },
     {
@@ -37,7 +37,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella și șuncă Praga.",
         allergens: "Gluten, Lapte",
         nutritionAnchor: "pizza-margherita-cu-sunca",
-        videoPoster: "images/posters/pizza_margherita_cu_sunca.jpg",
+        videoPoster: "images/posters/pizza_margherita_cu_sunca.webp",
         videoSrc: "videos/pizza_margherita_cu_sunca.mp4"
     },
     {
@@ -47,7 +47,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella și salam Chorizo picant.",
         allergens: "Gluten, Lapte (urme: Soia)",
         nutritionAnchor: "pizza-diavola",
-        videoPoster: "images/posters/pizza_diavola.jpg",
+        videoPoster: "images/posters/pizza_diavola.webp",
         videoSrc: "videos/pizza_diavola.mp4"
     },
     {
@@ -57,7 +57,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella, ciuperci, șuncă, salam și măsline.",
         allergens: "Gluten, Lapte (urme: Țelină, Muștar)",
         nutritionAnchor: "pizza-capriciosa",
-        videoPoster: "images/posters/pizza_capricciosa.jpg",
+        videoPoster: "images/posters/pizza_capricciosa.webp",
         videoSrc: "videos/pizza_capricciosa.mp4"
     },
     {
@@ -67,7 +67,7 @@ const pizzas = [
         ingredients: "Mozzarella, gorgonzola, brânză afumată și parmezan.",
         allergens: "Gluten, Ouă, Lapte",
         nutritionAnchor: "pizza-4-formagi",
-        videoPoster: "images/posters/pizza_4_formaggi.jpg",
+        videoPoster: "images/posters/pizza_4_formaggi.webp",
         videoSrc: "videos/pizza_4_formaggi.mp4"
     },
     {
@@ -77,7 +77,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella, roșii și ton.",
         allergens: "Gluten, Pește, Lapte",
         nutritionAnchor: "pizza-cu-ton",
-        videoPoster: "images/posters/pizza_cu_ton.jpg",
+        videoPoster: "images/posters/pizza_cu_ton.webp",
         videoSrc: "videos/pizza_cu_ton.mp4"
     },
     {
@@ -87,7 +87,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella, salam de vară, șuncă Praga, ardei, roșii și măsline.",
         allergens: "Gluten, Soia, Lapte (urme: Țelină, Muștar)",
         nutritionAnchor: "pizza-gondola",
-        videoPoster: "images/posters/pizza_gondola.jpg",
+        videoPoster: "images/posters/pizza_gondola.webp",
         videoSrc: "videos/pizza_gondola.mp4"
     },
     {
@@ -97,7 +97,7 @@ const pizzas = [
         ingredients: "Mozzarella și șuncă.",
         allergens: "Gluten, Lapte",
         nutritionAnchor: "pizza-ripiena",
-        videoPoster: "images/posters/pizza_ripiena_cu_sunca.jpg",
+        videoPoster: "images/posters/pizza_ripiena_cu_sunca.webp",
         videoSrc: "videos/pizza_ripiena_cu_sunca.mp4"
     },
     {
@@ -107,7 +107,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella, ceafă afumată, roșii, porumb și măsline.",
         allergens: "Gluten, Soia, Lapte",
         nutritionAnchor: "pizza-regina",
-        videoPoster: "images/posters/pizza_regina.jpg",
+        videoPoster: "images/posters/pizza_regina.webp",
         videoSrc: "videos/pizza_regina.mp4"
     },
     {
@@ -117,7 +117,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella, cârnați cabanos, porumb, ardei și măsline.",
         allergens: "Gluten, Soia, Lapte",
         nutritionAnchor: "pizza-cabanos",
-        videoPoster: "images/posters/pizza_cabanos.jpg",
+        videoPoster: "images/posters/pizza_cabanos.webp",
         videoSrc: "videos/pizza_cabanos.mp4"
     },
     {
@@ -127,7 +127,7 @@ const pizzas = [
         ingredients: "Sos de roșii, mozzarella, roșii, ardei și piept de pui.",
         allergens: "Gluten, Lapte",
         nutritionAnchor: "pizza-de-pui",
-        videoPoster: "images/posters/pizza_piept_pui.jpg",
+        videoPoster: "images/posters/pizza_piept_pui.webp",
         videoSrc: "videos/pizza_piept_pui.mp4"
     }
 ];
@@ -237,7 +237,7 @@ function renderProducts() {
                 <div class="w-full min-w-0 lg:col-span-7 ${isEven ? 'lg:order-2' : 'lg:order-1'}">
                     <div class="video-box relative rounded-2xl md:rounded-3xl overflow-hidden bg-slate-900 border-2 border-white/80 aspect-video md:aspect-[16/10] group shadow-xl w-full">
                         <video class="menu-video w-full h-full object-cover" poster="${pizza.videoPoster}" playsinline muted loop preload="none" data-src="${pizza.videoSrc}" aria-label="Video ${pizza.name}"></video>
-                        <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur text-gondola-primary border border-gondola-cardBorder shadow"><i class="fa-solid fa-play text-[10px] mr-1"></i> ${pizza.name}</div>
+                        <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur text-gondola-primary border border-gondola-cardBorder shadow"><svg class="icon text-[10px] mr-1" aria-hidden="true"><use href="#icon-play"></use></svg> ${pizza.name}</div>
                     </div>
                 </div>
                 <div class="w-full min-w-0 lg:col-span-5 flex flex-col justify-between ${isEven ? 'lg:order-1' : 'lg:order-2'} mt-6 lg:mt-0">
@@ -248,11 +248,11 @@ function renderProducts() {
                         ${pizza.allergens ? `
                         <div class="mb-4 flex flex-wrap items-center gap-1.5 text-xs">
                             <span class="inline-flex items-center gap-1 font-semibold text-rose-800 bg-rose-50 px-2.5 py-0.5 rounded-lg border border-rose-200">
-                                <i class="fa-solid fa-circle-exclamation text-[10px] text-gondola-primary"></i> Alergeni: ${pizza.allergens}
+                                <svg class="icon text-[10px] text-gondola-primary" aria-hidden="true"><use href="#icon-circle-exclamation"></use></svg> Alergeni: ${pizza.allergens}
                             </span>
                             ${pizza.nutritionAnchor ? `
                             <a href="alergeni-si-nutritie.html#${pizza.nutritionAnchor}" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-bold text-gondola-primary hover:underline ml-1">
-                                <i class="fa-solid fa-table-list text-[10px]"></i> Fișă nutrițională OPANPC
+                                <svg class="icon text-[10px]" aria-hidden="true"><use href="#icon-table-list"></use></svg> Fișă nutrițională OPANPC
                             </a>` : ''}
                         </div>` : ''}
                     </div>
@@ -270,12 +270,12 @@ function renderProducts() {
                                 <button type="button" onclick="setGrams(${pizza.id},1200)" id="btn-g-${pizza.id}-1200" class="gram-btn py-2 text-[11px] font-bold rounded-xl border transition shadow-sm">Întreagă</button>
                             </div>
                             <div class="flex items-center justify-between bg-white border border-gondola-cardBorder rounded-xl px-3 py-2 shadow-sm">
-                                <span class="text-[11px] text-gondola-muted font-semibold flex items-center gap-1"><i class="fa-solid fa-scale-balanced text-gondola-accent"></i> Ajustare 100g:</span>
+                                <span class="text-[11px] text-gondola-muted font-semibold flex items-center gap-1"><svg class="icon text-gondola-accent" aria-hidden="true"><use href="#icon-scale-balanced"></use></svg> Ajustare 100g:</span>
                                 <div class="flex items-center gap-1.5"><button type="button" onclick="stepGrams(${pizza.id},-100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder font-black" aria-label="Scade 100g din cantitatea de ${pizza.name}">−</button><span id="counter-grams-${pizza.id}" class="text-xs font-mono font-bold text-gondola-charcoal min-w-16 text-center">${grams}g</span><button type="button" onclick="stepGrams(${pizza.id},100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-black" aria-label="Adaugă 100g la cantitatea de ${pizza.name}">+</button></div>
                             </div>
                             <p id="whole-note-${pizza.id}" class="${whole ? '' : 'hidden'} mt-2 text-[10px] leading-relaxed text-gondola-muted">* Preț orientativ. Pizza este cântărită, iar prețul final poate varia în funcție de gramajul real (aprox. ±100g).</p>
                         </div>
-                        <button type="button" onclick="addToCart(${pizza.id}, event)" class="w-full bg-gondola-charcoal hover:bg-gondola-primary text-white font-extrabold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 group shadow-md uppercase font-display tracking-wide text-xs sm:text-sm"><i class="fa-solid fa-cart-plus text-amber-400 group-hover:text-white transition"></i><span>Adaugă în cuptor</span></button>
+                        <button type="button" onclick="addToCart(${pizza.id}, event)" class="w-full bg-gondola-charcoal hover:bg-gondola-primary text-white font-extrabold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 group shadow-md uppercase font-display tracking-wide text-xs sm:text-sm"><svg class="icon text-amber-400 group-hover:text-white transition" aria-hidden="true"><use href="#icon-cart-plus"></use></svg><span>Adaugă în cuptor</span></button>
                     </div>
                 </div>
             </div>`;
@@ -382,15 +382,47 @@ function initLazyProductVideos() {
 
 let heroVideoIsVisible = true;
 let heroVideoObserver = null;
+let heroVideoStarted = false;
+
+function startHeroVideo() {
+    const heroVideo = document.getElementById('hero-video');
+    if (!heroVideo || heroVideoStarted) return;
+    heroVideoStarted = true;
+    heroVideo.preload = 'auto';
+    heroVideo.play().catch(() => {});
+}
 
 function initHeroVideoVisibility() {
     const heroVideo = document.getElementById('hero-video');
     if (!heroVideo) return;
 
+    heroVideo.addEventListener('playing', () => {
+        heroVideo.classList.remove('opacity-0');
+        heroVideo.classList.add('opacity-100');
+    }, { once: true });
+
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) {
         heroVideo.pause();
         return;
+    }
+
+    // Start video on interaction or after idle delay (protects initial LCP and FCP)
+    const interactionEvents = ['scroll', 'touchstart', 'mousemove', 'keydown'];
+    const onUserInteract = () => {
+        interactionEvents.forEach(e => window.removeEventListener(e, onUserInteract));
+        startHeroVideo();
+    };
+    interactionEvents.forEach(e => window.addEventListener(e, onUserInteract, { once: true, passive: true }));
+
+    if ('requestIdleCallback' in window) {
+        window.addEventListener('load', () => {
+            requestIdleCallback(() => {
+                setTimeout(startHeroVideo, 1800);
+            }, { timeout: 3500 });
+        });
+    } else {
+        window.addEventListener('load', () => setTimeout(startHeroVideo, 2000));
     }
 
     if (!('IntersectionObserver' in window)) return;
@@ -399,8 +431,7 @@ function initHeroVideoVisibility() {
     heroVideoObserver = new IntersectionObserver(entries => {
         const entry = entries[0];
         heroVideoIsVisible = !!entry?.isIntersecting && entry.intersectionRatio > 0.05;
-        if (heroVideoIsVisible && !document.hidden) {
-            heroVideo.preload = 'auto';
+        if (heroVideoIsVisible && !document.hidden && heroVideoStarted) {
             heroVideo.play().catch(() => {});
         } else {
             heroVideo.pause();
@@ -439,7 +470,7 @@ window.addToCart = function(pizzaId, evt) {
     saveCartToStorage();
     updateCartUI();
     const btn = evt?.currentTarget;
-    if (btn) { const original = btn.innerHTML; btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> Adăugat (${displaySelection(grams)})`; btn.classList.add('bg-emerald-700'); setTimeout(() => { btn.innerHTML = original; btn.classList.remove('bg-emerald-700'); }, 1100); }
+    if (btn) { const original = btn.innerHTML; btn.innerHTML = `<svg class="icon text-emerald-400" aria-hidden="true"><use href="#icon-check"></use></svg> Adăugat (${displaySelection(grams)})`; btn.classList.add('bg-emerald-700'); setTimeout(() => { btn.innerHTML = original; btn.classList.remove('bg-emerald-700'); }, 1100); }
 };
 
 const resetConfirmModal = document.getElementById("reset-confirm-modal");

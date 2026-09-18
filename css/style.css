@@ -195,3 +195,9 @@ body {
 .sauce-step { transition: transform .15s ease, border-color .15s ease, background-color .15s ease; }
 .sauce-step:hover { transform: translateY(-1px); border-color:#C82333; }
 .sauce-step:active { transform: translateY(0); }
+
+/* SVG Icon System & Video Transitions */
+.icon { display: inline-block; width: 1em; height: 1em; vertical-align: -0.125em; fill: currentColor; }
+.opacity-0 { opacity: 0; }
+.opacity-100 { opacity: 1; }
+.pointer-events-none { pointer-events: none; }
