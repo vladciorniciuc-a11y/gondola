@@ -18,7 +18,7 @@ module.exports = {
           primaryHover: '#A71D2A',
           accent: '#D97706',
           charcoal: '#1E1B18',
-          muted: '#6B625B'
+          muted: '#3D3732'
         }
       },
       fontFamily: {

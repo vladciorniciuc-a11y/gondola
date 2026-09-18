@@ -400,6 +400,7 @@ function initHeroVideoVisibility() {
         const entry = entries[0];
         heroVideoIsVisible = !!entry?.isIntersecting && entry.intersectionRatio > 0.05;
         if (heroVideoIsVisible && !document.hidden) {
+            heroVideo.preload = 'auto';
             heroVideo.play().catch(() => {});
         } else {
             heroVideo.pause();
@@ -600,7 +601,6 @@ orderForm.addEventListener("submit", e => {
 
 document.addEventListener("DOMContentLoaded", () => {
     loadCartFromStorage();
-    initHeroVideoVisibility();
     renderProducts();
     renderSauceQuantities();
     syncDeliveryFields();
@@ -608,5 +608,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const cutleryEl = document.getElementById("cust-cutlery");
     if (cutleryEl) {
         cutleryEl.addEventListener("change", saveCartToStorage);
+    }
+    // Start hero video after first render so network is 100% available for LCP
+    if ("requestIdleCallback" in window) {
+        requestIdleCallback(initHeroVideoVisibility);
+    } else {
+        setTimeout(initHeroVideoVisibility, 300);
     }
 });
