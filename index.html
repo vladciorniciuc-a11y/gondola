@@ -409,39 +409,27 @@
       ]
     }
     </script>
-    <!-- Google Fonts -->
+    <!-- Preload LCP Hero Poster (Instant Visual Rendering) -->
+    <link rel="preload" as="image" href="images/hero-poster-mobile.webp" type="image/webp" media="(max-width: 767px)" fetchpriority="high">
+    <link rel="preload" as="image" href="images/hero-poster.webp" type="image/webp" media="(min-width: 768px)" fetchpriority="high">
+
+    <!-- Preconnect External Assets -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gondola: {
-                            base: '#FDF7F2',       /* Fundal cald fin porțelan */
-                            cardBg: '#FFF0E5',     /* Card nuanță caldă diferită clar de fundal (teracotă deschisă/crem cald) */
-                            cardBorder: '#EED9CC', /* Margine elegantă distinctivă */
-                            subtle: '#FFE7D6',     
-                            primary: '#C82333',    /* Rosso Italian */
-                            primaryHover: '#A71D2A',
-                            accent: '#D97706',     /* Auriu crustă */
-                            charcoal: '#1E1B18',   /* Text principal foarte lizibil */
-                            muted: '#6B625B'       /* Text secundar */
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <!-- Non-blocking Google Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap"></noscript>
+
+    <!-- Optimized Production CSS (Tailwind Static + Custom Styles) -->
+    <link rel="stylesheet" href="css/tailwind.min.css">
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Non-blocking Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 </head>
 <body class="bg-gondola-base text-gondola-charcoal font-sans antialiased selection:bg-gondola-primary selection:text-white pb-28">
 
@@ -450,31 +438,31 @@
     <aside id="floating-actions" class="fixed right-4 sm:right-6 bottom-24 sm:bottom-24 z-40 flex flex-col items-center gap-2.5">
         <!-- 1. WhatsApp Direct -->
         <a href="https://wa.me/40747216161" target="_blank" rel="noopener noreferrer" 
-           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center text-xl shadow-lg shadow-emerald-500/30 transition-all duration-200 hover:scale-110" title="Comandă pe WhatsApp">
+           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center text-xl shadow-lg shadow-emerald-500/30 transition-all duration-200 hover:scale-110" title="Comandă pe WhatsApp" aria-label="Comandă pe WhatsApp la Pizzeria Gondola">
             <i class="fa-brands fa-whatsapp"></i>
         </a>
 
         <!-- 2. Instagram -->
         <a href="https://www.instagram.com/pizzeria_gondola.pn/" target="_blank" rel="noopener noreferrer" 
-           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-lg shadow-lg shadow-rose-500/25 transition-all duration-200 hover:scale-110" title="Instagram Pizzeria Gondola">
+           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-lg shadow-lg shadow-rose-500/25 transition-all duration-200 hover:scale-110" title="Instagram Pizzeria Gondola" aria-label="Profilul de Instagram Pizzeria Gondola">
             <i class="fa-brands fa-instagram"></i>
         </a>
 
         <!-- 3. Facebook -->
         <a href="https://www.facebook.com/profile.php?id=100064038030513" target="_blank" rel="noopener noreferrer" 
-           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#1877F2] hover:bg-[#1265cc] text-white flex items-center justify-center text-lg shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-110" title="Facebook Pizzeria Gondola">
+           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#1877F2] hover:bg-[#1265cc] text-white flex items-center justify-center text-lg shadow-lg shadow-blue-500/25 transition-all duration-200 hover:scale-110" title="Facebook Pizzeria Gondola" aria-label="Pagina de Facebook Pizzeria Gondola">
             <i class="fa-brands fa-facebook-f"></i>
         </a>
 
         <!-- 4. Buton Suna / Telefon -->
         <a href="tel:0747216161" 
-           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gondola-primary hover:bg-gondola-primaryHover text-white flex items-center justify-center text-base shadow-lg shadow-red-500/30 transition-all duration-200 hover:scale-110" title="Apelează Pizzeria">
+           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gondola-primary hover:bg-gondola-primaryHover text-white flex items-center justify-center text-base shadow-lg shadow-red-500/30 transition-all duration-200 hover:scale-110" title="Apelează Pizzeria" aria-label="Apelează telefonic Pizzeria Gondola la 0747.216.161">
             <i class="fa-solid fa-phone"></i>
         </a>
 
         <!-- 5. Scroll to Top Button (SUB cel de sună) -->
         <button id="scroll-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border-2 border-gondola-cardBorder hover:border-gondola-primary text-gondola-charcoal hover:text-gondola-primary flex items-center justify-center text-base shadow-lg transition-all duration-200 hover:scale-110" title="Mergi sus la început">
+           class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border-2 border-gondola-cardBorder hover:border-gondola-primary text-gondola-charcoal hover:text-gondola-primary flex items-center justify-center text-base shadow-lg transition-all duration-200 hover:scale-110" title="Mergi sus la început" aria-label="Mergi la începutul paginii">
             <i class="fa-solid fa-arrow-up"></i>
         </button>
     </aside>
@@ -515,7 +503,7 @@
                 id="hero-video"
                 class="w-full h-full object-cover object-center" 
                 autoplay muted loop playsinline preload="metadata"
-                poster="images/how-it-works/step-4.jpg">
+                poster="images/hero-poster.webp">
                 <source src="videos/hero_pizza_cuptor_mobile.mp4" type="video/mp4" media="(max-width: 767px)">
                 <source src="videos/hero_pizza_cuptor.mp4" type="video/mp4">
             </video>
@@ -530,7 +518,7 @@
             <div class="inline-flex flex-wrap items-center justify-center gap-2.5 px-4 py-1.5 rounded-full bg-black/50 border border-white/20 shadow-2xl mb-6 backdrop-blur-md">
                 <span class="font-extrabold text-amber-400 tracking-wider text-xs uppercase font-display">Pizzeria Gondola</span>
                 <span class="text-white/40">•</span>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" class="w-4 h-4">
+                <img src="images/google-g.svg" alt="Google" width="16" height="16" class="w-4 h-4">
                 <div class="flex text-amber-400 text-xs">
                     <i class="fa-solid fa-star"></i>
                     <i class="fa-solid fa-star"></i>
@@ -697,9 +685,11 @@
     <!-- Visual Atmosphere Gallery -->
     <section class="py-16 bg-white border-y border-gondola-cardBorder">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-gondola-primary">Savoarea Italiei în Piatra Neamț</span>
-                <h3 class="text-2xl md:text-4xl font-black text-gondola-charcoal mt-1 font-display">Direct din Cuptorul Nostru</h3>
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-gondola-primary bg-rose-100/70 border border-rose-200 px-3.5 py-1 rounded-full">
+                    Galerie Foto &amp; Atmosferă
+                </span>
+                <h2 class="text-2xl md:text-4xl font-black text-gondola-charcoal mt-1 font-display">Direct din Cuptorul Nostru</h2>
                 <p class="text-xs md:text-sm text-gondola-muted mt-2">Livrare gratuită în Piatra Neamț de la aproximativ 64 lei • Zone limitrofe de la 100 lei</p>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
@@ -738,7 +728,7 @@
                 <span class="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.2em] text-amber-300">
                     <i class="fa-solid fa-route"></i> Zone de livrare
                 </span>
-                <h3 class="text-3xl md:text-5xl font-black mt-3 font-display">Pizza fierbinte, până la ușa ta.</h3>
+                <h2 class="text-3xl md:text-5xl font-black mt-3 font-display">Pizza fierbinte, până la ușa ta.</h2>
                 <p class="text-white/70 mt-3 text-sm md:text-base leading-relaxed">Condiții simple și transparente. Alegi zona în formular, iar site-ul îți arată automat cât mai ai până la livrarea gratuită.</p>
             </div>
 
@@ -747,7 +737,7 @@
                     <div class="flex items-start justify-between gap-4 mb-6">
                         <div>
                             <div class="w-12 h-12 rounded-2xl bg-emerald-400/15 text-emerald-300 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-location-dot"></i></div>
-                            <h4 class="text-2xl font-black font-display">Piatra Neamț</h4>
+                            <h3 class="text-2xl font-black font-display">Piatra Neamț</h3>
                             <p class="text-white/65 text-sm mt-1">Livrare gratuită în oraș.</p>
                         </div>
                         <span class="shrink-0 px-3 py-1.5 rounded-full bg-emerald-400/15 border border-emerald-300/25 text-emerald-300 text-[11px] font-black uppercase tracking-wider">Gratis de la ~64 lei</span>
@@ -761,7 +751,7 @@
                     <div class="flex items-start justify-between gap-4 mb-5">
                         <div>
                             <div class="w-12 h-12 rounded-2xl bg-amber-400/15 text-amber-300 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-car-side"></i></div>
-                            <h4 class="text-2xl font-black font-display">Zone limitrofe</h4>
+                            <h3 class="text-2xl font-black font-display">Zone limitrofe</h3>
                             <p class="text-white/65 text-sm mt-1">Livrare gratuită pentru comenzi de minimum 100 lei.</p>
                         </div>
                         <span class="shrink-0 px-3 py-1.5 rounded-full bg-amber-400/15 border border-amber-300/25 text-amber-300 text-[11px] font-black uppercase tracking-wider">Gratis de la 100 lei</span>
@@ -782,9 +772,9 @@
                 <span class="text-xs font-extrabold uppercase tracking-widest text-gondola-primary bg-rose-100/70 border border-rose-200 px-3.5 py-1 rounded-full">
                     Întrebări Frecvente &amp; Comenzi
                 </span>
-                <h3 id="faq-heading" class="text-3xl md:text-5xl font-black text-gondola-charcoal mt-3 mb-4 font-display">
+                <h2 id="faq-heading" class="text-3xl md:text-5xl font-black text-gondola-charcoal mt-3 mb-4 font-display">
                     Tot ce vrei să știi despre Pizzeria Gondola
-                </h3>
+                </h2>
                 <p class="text-gondola-muted text-sm md:text-base leading-relaxed">
                     Răspunsuri rapide despre comanda la gramaj, livrare gratuită în Piatra Neamț și împrejurimi, sosuri și transmiterea comenzii pe WhatsApp.
                 </p>
@@ -908,7 +898,7 @@
             <div class="lg:col-span-1 space-y-6">
                 <div>
                     <span class="text-xs font-extrabold uppercase tracking-widest text-gondola-primary">Piatra Neamț</span>
-                    <h3 class="text-2xl font-black text-gondola-charcoal mt-1 mb-2 font-display">Pizzeria Gondola</h3>
+                    <h2 class="text-2xl font-black text-gondola-charcoal mt-1 mb-2 font-display">Pizzeria Gondola</h2>
                     <p class="text-sm text-gondola-muted">Te așteptăm cu pizza caldă gata de ridicat sau comandă cu livrare în Piatra Neamț și zonele limitrofe.</p>
                 </div>
                 
@@ -1056,14 +1046,14 @@
                 <div class="flex items-center gap-2 text-gondola-charcoal font-black text-base md:text-lg font-display">
                     <i class="fa-brands fa-whatsapp text-emerald-600 text-xl"></i> Finalizare Comandă Gondola
                 </div>
-                <button id="close-modal" class="text-gondola-muted hover:text-gondola-charcoal text-2xl p-1 leading-none">&times;</button>
+                <button id="close-modal" aria-label="Închide fereastra de finalizare comandă" class="text-gondola-muted hover:text-gondola-charcoal text-2xl p-1 leading-none">&times;</button>
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6">
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-gondola-muted">Pizza Ta:</h4>
-                        <button onclick="openResetModal()" class="text-[11px] text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1">
+                        <div class="text-xs font-extrabold uppercase tracking-wider text-gondola-muted">Pizza Ta:</div>
+                        <button type="button" onclick="openResetModal()" aria-label="Golește coșul de cumpărături" class="text-[11px] text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1">
                             <i class="fa-solid fa-trash-can"></i> Golește tot
                         </button>
                     </div>
@@ -1189,7 +1179,7 @@
             <div class="w-14 h-14 rounded-2xl bg-rose-50 text-gondola-primary flex items-center justify-center text-2xl mx-auto mb-4 border border-rose-200">
                 <i class="fa-solid fa-pizza-slice"></i>
             </div>
-            <h3 class="text-xl font-black text-gondola-charcoal font-display mb-2">Refaci selecția comenzii?</h3>
+            <h2 class="text-xl font-black text-gondola-charcoal font-display mb-2">Refaci selecția comenzii?</h2>
             <p class="text-xs text-gondola-muted mb-6 leading-relaxed">
                 Toate feliile și gramajele alese până acum vor fi eliminate, permițându-ți să începi o nouă comandă curată.
             </p>
