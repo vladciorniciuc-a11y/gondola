@@ -139,7 +139,6 @@ const deliveryZones = [
 
 const STORAGE_CART_KEY = "gondola_cart_v1";
 const STORAGE_SAUCES_KEY = "gondola_sauces_v1";
-const STORAGE_CUTLERY_KEY = "gondola_cutlery_v1";
 
 let cart = {};
 let selectedGrams = {};
@@ -149,10 +148,6 @@ function saveCartToStorage() {
     try {
         localStorage.setItem(STORAGE_CART_KEY, JSON.stringify(cart));
         localStorage.setItem(STORAGE_SAUCES_KEY, JSON.stringify(sauceQuantities));
-        const cutleryEl = document.getElementById("cust-cutlery");
-        if (cutleryEl) {
-            localStorage.setItem(STORAGE_CUTLERY_KEY, cutleryEl.checked ? "1" : "0");
-        }
     } catch (_) {}
 }
 
@@ -171,11 +166,6 @@ function loadCartFromStorage() {
                     if (typeof parsedSauces[k] === "number") sauceQuantities[k] = parsedSauces[k];
                 });
             }
-        }
-        const savedCutlery = localStorage.getItem(STORAGE_CUTLERY_KEY);
-        const cutleryEl = document.getElementById("cust-cutlery");
-        if (cutleryEl && savedCutlery !== null) {
-            cutleryEl.checked = savedCutlery === "1";
         }
     } catch (_) {}
 }
@@ -479,12 +469,10 @@ window.closeResetModal = function() { resetConfirmModal.classList.add("hidden");
 window.confirmResetCart = function() {
     cart = {};
     Object.keys(sauceQuantities).forEach(name => sauceQuantities[name] = 0);
-    const cutleryEl = document.getElementById("cust-cutlery");
-    if (cutleryEl) cutleryEl.checked = false;
     try {
         localStorage.removeItem(STORAGE_CART_KEY);
         localStorage.removeItem(STORAGE_SAUCES_KEY);
-        localStorage.removeItem(STORAGE_CUTLERY_KEY);
+        localStorage.removeItem("gondola_cutlery_v1");
     } catch (_) {}
     renderSauceQuantities();
     updateCartUI();
@@ -612,14 +600,10 @@ orderForm.addEventListener("submit", e => {
     const pizzaTotal=cartPizzaTotal(), sauceTotal=saucesTotal(), grand=pizzaTotal+sauceTotal;
     let deliveryStatus = 'Ridicare personală';
     if (type === 'Livrare la domiciliu') { const threshold=zone==='Piatra Neamț'?PIATRA_FREE_DELIVERY_MIN:OUTSIDE_FREE_DELIVERY_MIN; deliveryStatus = grand >= threshold ? 'Livrare gratuită' : (zone==='Piatra Neamț' ? `Sub pragul orientativ de ${threshold} LEI` : 'Cost livrare de confirmat'); }
-    const wantsCutlery = document.getElementById("cust-cutlery")?.checked;
     let message = `🍕 *COMANDĂ NOUĂ - PIZZERIA GONDOLA*\n📍 *B-dul Decebal nr. 35, Piatra Neamț*\n--------------------------------------\n${itemsText}`;
     if (sauces.length) {
-        const saucesText = sauces.map(sauce => `${sauce.quantity}× ${sauce.name}`).join(', ');
+        const saucesText = sauces.map(sauce => `${sauce.quantity}× ${sauce.name} (~70g)`).join(', ');
         message += `\n🥫 *Sosuri:* ${saucesText} (${money(sauceTotal)} LEI)\n`;
-    }
-    if (wantsCutlery) {
-        message += `🍴 *Tacâmuri & șervețele:* Da, vă rog\n`;
     }
     message += `--------------------------------------\n⚖️ *Gramaj estimativ:* ${totalGrams} g\n💰 *Pizza:* ${money(pizzaTotal)} LEI\n🥫 *Sosuri:* ${money(sauceTotal)} LEI\n💳 *Total estimativ:* ${money(grand)} LEI\n`;
     message += `\n👤 *Client:* ${name}\n🚗 *Primire:* ${type}\n`;
@@ -636,10 +620,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSauceQuantities();
     syncDeliveryFields();
     updateCartUI();
-    const cutleryEl = document.getElementById("cust-cutlery");
-    if (cutleryEl) {
-        cutleryEl.addEventListener("change", saveCartToStorage);
-    }
     // Start hero video after first render so network is 100% available for LCP
     if ("requestIdleCallback" in window) {
         requestIdleCallback(initHeroVideoVisibility);
