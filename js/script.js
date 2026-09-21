@@ -225,9 +225,12 @@ function renderProducts() {
         card.innerHTML = `
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
                 <div class="w-full min-w-0 lg:col-span-7 ${isEven ? 'lg:order-2' : 'lg:order-1'}">
-                    <div class="video-box relative rounded-2xl md:rounded-3xl overflow-hidden bg-slate-900 border-2 border-white/80 aspect-video md:aspect-[16/10] group shadow-xl w-full">
-                        <video class="menu-video w-full h-full object-cover" poster="${pizza.videoPoster}" playsinline muted loop preload="none" data-src="${pizza.videoSrc}" aria-label="Video ${pizza.name}"></video>
-                        <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur text-gondola-primary border border-gondola-cardBorder shadow"><svg class="icon text-[10px] mr-1" aria-hidden="true"><use href="#icon-play"></use></svg> ${pizza.name}</div>
+                    <div class="video-box relative rounded-2xl md:rounded-3xl overflow-hidden bg-slate-900 border-2 border-white/80 aspect-video md:aspect-[16/10] group shadow-xl w-full cursor-pointer">
+                        <video class="menu-video w-full h-full object-cover" poster="${pizza.videoPoster}" playsinline muted preload="none" disablepictureinpicture controlslist="nodownload nofullscreen noremoteplayback" data-src="${pizza.videoSrc}" aria-label="Video ${pizza.name}"></video>
+                        <div class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/95 backdrop-blur text-gondola-primary border border-gondola-cardBorder shadow pointer-events-none"><svg class="icon text-[10px] mr-1" aria-hidden="true"><use href="#icon-play"></use></svg> ${pizza.name}</div>
+                        <button type="button" class="video-replay-btn" aria-label="Reia video ${pizza.name}" title="Reia video">
+                            <svg class="icon text-xl ml-0.5" aria-hidden="true"><use href="#icon-play"></use></svg>
+                        </button>
                     </div>
                 </div>
                 <div class="w-full min-w-0 lg:col-span-5 flex flex-col justify-between ${isEven ? 'lg:order-1' : 'lg:order-2'} mt-6 lg:mt-0">
@@ -276,98 +279,113 @@ function renderProducts() {
 }
 
 /*
- * Performance video produse:
- * - clipurile locale sunt preîncărcate discret înainte de a intra în viewport;
- * - pornesc când devin vizibile și rămân pornite până ies complet din ecran;
- * - NU mai eliminăm/reatașăm src la scroll (asta provoca buffering repetat și freeze);
- * - clipurile demo externe nu pornesc automat la scroll; se încarcă doar la click.
+ * Control inteligent video produse:
+ * - Flux unic activ: un singur video descarcă și rulează la un moment dat (zero congestie/freeze pe desktop);
+ * - Prag 1 (Start la >= 50% vizibil): pornește după stabilizare la scroll (80ms);
+ * - Prag 2 (Pauză la < 20% vizibil): se oprește păstrând secunda curentă (fără resetare/fără reload);
+ * - La scroll up înapoi peste el, reia redarea lin exact de unde a rămas;
+ * - Fără loop: la final îngheață pe ultimul cadru și afișează butonul elegant de Replay.
  */
 let productVideoObserver = null;
-let productVideoPreloadObserver = null;
+let activePlayTimeout = null;
 
 function initLazyProductVideos() {
     if (productVideoObserver) productVideoObserver.disconnect();
-    if (productVideoPreloadObserver) productVideoPreloadObserver.disconnect();
+    if (activePlayTimeout) clearTimeout(activePlayTimeout);
 
-    const videos = [...document.querySelectorAll('.menu-video')];
-    if (!videos.length) return;
+    const videoBoxes = [...document.querySelectorAll('.video-box')];
+    if (!videoBoxes.length) return;
 
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const localVideos = videos.filter(video => !/^https?:/i.test(video.dataset.src || ''));
-    const remoteVideos = videos.filter(video => /^https?:/i.test(video.dataset.src || ''));
+    const allVideos = [...document.querySelectorAll('.menu-video')];
 
     const ensureLoaded = video => {
         if (!video.src && video.dataset.src) {
             video.src = video.dataset.src;
             video.preload = 'auto';
-            video.load();
         }
     };
 
-    const pauseOtherLocalVideos = active => {
-        localVideos.forEach(video => {
-            if (video !== active && !video.paused) video.pause();
+    const pauseOtherVideos = active => {
+        allVideos.forEach(video => {
+            if (video !== active && !video.paused) {
+                video.pause();
+            }
         });
     };
 
-    const playLocalVideo = video => {
+    const playVideo = video => {
         if (reduceMotion) return;
         ensureLoaded(video);
-        pauseOtherLocalVideos(video);
+        pauseOtherVideos(video);
         const promise = video.play();
         if (promise && typeof promise.catch === 'function') promise.catch(() => {});
     };
 
-    if ('IntersectionObserver' in window) {
-        // Încarcă sursa cu puțin înainte să ajungă în viewport, fără a porni clipul.
-        productVideoPreloadObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    ensureLoaded(entry.target);
-                    productVideoPreloadObserver.unobserve(entry.target);
-                }
+    videoBoxes.forEach(box => {
+        const video = box.querySelector('.menu-video');
+        const replayBtn = box.querySelector('.video-replay-btn');
+        if (!video) return;
+
+        video.addEventListener('ended', () => {
+            if (replayBtn) replayBtn.classList.add('is-visible');
+        });
+
+        video.addEventListener('play', () => {
+            if (replayBtn) replayBtn.classList.remove('is-visible');
+        });
+
+        if (replayBtn) {
+            replayBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                video.currentTime = 0;
+                playVideo(video);
             });
-        }, { rootMargin: '700px 0px 700px 0px', threshold: 0 });
+        }
 
-        localVideos.forEach(video => productVideoPreloadObserver.observe(video));
-
-        // Histerezis simplu: pornește de la 15% vizibil, se oprește doar când iese complet.
-        // Astfel nu mai comută play/pause repetat în timpul scroll-ului lent.
-        productVideoObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                const video = entry.target;
-                if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
-                    playLocalVideo(video);
-                } else if (!entry.isIntersecting || entry.intersectionRatio <= 0.001) {
-                    if (!video.paused) video.pause();
-                }
-            });
-        }, { threshold: [0, 0.15], rootMargin: '0px' });
-
-        localVideos.forEach(video => productVideoObserver.observe(video));
-    } else {
-        // Fallback: primul video local pornește la interacțiune, fără autoplay agresiv.
-        localVideos[0]?.addEventListener('click', () => playLocalVideo(localVideos[0]));
-    }
-
-    // Sursele externe sunt demo-uri grele. Nu le descărcăm la simplul scroll.
-    // Utilizatorul le poate porni explicit prin click.
-    remoteVideos.forEach(video => {
-        video.style.cursor = 'pointer';
-        video.title = 'Click pentru redare video';
-        video.addEventListener('click', () => {
-            if (!video.src) {
-                ensureLoaded(video);
-                const promise = video.play();
-                if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+        box.addEventListener('click', e => {
+            if (e.target.closest('button') && !e.target.closest('.video-replay-btn')) return;
+            if (video.ended) {
+                video.currentTime = 0;
+                playVideo(video);
             } else if (video.paused) {
-                const promise = video.play();
-                if (promise && typeof promise.catch === 'function') promise.catch(() => {});
+                playVideo(video);
             } else {
                 video.pause();
+                if (replayBtn) replayBtn.classList.add('is-visible');
             }
         });
     });
+
+    if ('IntersectionObserver' in window) {
+        let currentCandidate = null;
+
+        productVideoObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    currentCandidate = video;
+                    if (activePlayTimeout) clearTimeout(activePlayTimeout);
+                    activePlayTimeout = setTimeout(() => {
+                        if (currentCandidate && !currentCandidate.ended) {
+                            playVideo(currentCandidate);
+                        }
+                    }, 80);
+                } else if (!entry.isIntersecting || entry.intersectionRatio < 0.2) {
+                    if (!video.paused) {
+                        video.pause();
+                    }
+                    if (currentCandidate === video) {
+                        currentCandidate = null;
+                    }
+                }
+            });
+        }, { threshold: [0, 0.2, 0.5], rootMargin: '0px' });
+
+        allVideos.forEach(video => productVideoObserver.observe(video));
+    } else {
+        allVideos[0] && ensureLoaded(allVideos[0]);
+    }
 }
 
 let heroVideoIsVisible = true;
