@@ -491,10 +491,6 @@ window.addToCart = function(pizzaId, evt) {
     updateCartUI();
     renderModalCart();
 
-    // Deschide instant coșul de cumpărături
-    checkoutModal.classList.remove("hidden");
-    checkoutModal.classList.add("flex");
-
     const btn = evt?.currentTarget;
     if (btn) {
         const original = btn.innerHTML;
