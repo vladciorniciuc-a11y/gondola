@@ -1,5 +1,6 @@
 const PRICE_PER_100G = 5.30;
 const WHOLE_PIZZA_REFERENCE_GRAMS = 1200;
+const WHOLE_PIZZA_DISPLAY_PRICE = 64.00;
 const SAUCE_PRICES = {
     "Sos roșii dulce": 2.00,
     "Sos roșii picant": 2.00,
@@ -172,7 +173,13 @@ function loadCartFromStorage() {
 
 function money(value) { return Number(value).toFixed(2); }
 function displaySelection(grams) { return grams === WHOLE_PIZZA_REFERENCE_GRAMS ? "Pizza întreagă" : `${grams >= 1000 ? (grams/1000).toLocaleString('ro-RO', {maximumFractionDigits: 1}) + ' kg' : grams + ' g'}`; }
-function estimatedPizzaPrice(grams) { return grams === WHOLE_PIZZA_REFERENCE_GRAMS ? WHOLE_PIZZA_DISPLAY_PRICE : grams * PRICE_PER_100G / 100; }
+function estimatedPizzaPrice(grams) {
+    if (grams === WHOLE_PIZZA_REFERENCE_GRAMS) return WHOLE_PIZZA_DISPLAY_PRICE;
+    if (grams > WHOLE_PIZZA_REFERENCE_GRAMS && grams % WHOLE_PIZZA_REFERENCE_GRAMS === 0) {
+        return (grams / WHOLE_PIZZA_REFERENCE_GRAMS) * WHOLE_PIZZA_DISPLAY_PRICE;
+    }
+    return grams * PRICE_PER_100G / 100;
+}
 function cartPizzaTotal() { return Object.values(cart).reduce((sum, grams) => sum + estimatedPizzaPrice(grams), 0); }
 function cartTotalGrams() { return Object.values(cart).reduce((sum, grams) => sum + grams, 0); }
 const sauceQuantities = {
@@ -472,13 +479,41 @@ window.setGrams = function(pizzaId, grams) {
     [300,600,1000,1200].forEach(p => document.getElementById(`btn-g-${pizzaId}-${p}`)?.classList.toggle('active', p === grams));
 };
 window.stepGrams = function(pizzaId, step) { setGrams(pizzaId, (selectedGrams[pizzaId] || 300) + step); };
+let addToCartCooldown = false;
 window.addToCart = function(pizzaId, evt) {
+    if (addToCartCooldown) return;
+    addToCartCooldown = true;
+    setTimeout(() => { addToCartCooldown = false; }, 400);
+
     const grams = selectedGrams[pizzaId] || 300;
     cart[pizzaId] = (cart[pizzaId] || 0) + grams;
     saveCartToStorage();
     updateCartUI();
+    renderModalCart();
+
+    // Deschide instant coșul de cumpărături
+    checkoutModal.classList.remove("hidden");
+    checkoutModal.classList.add("flex");
+
     const btn = evt?.currentTarget;
-    if (btn) { const original = btn.innerHTML; btn.innerHTML = `<svg class="icon text-emerald-400" aria-hidden="true"><use href="#icon-check"></use></svg> Adăugat (${displaySelection(grams)})`; btn.classList.add('bg-emerald-700'); setTimeout(() => { btn.innerHTML = original; btn.classList.remove('bg-emerald-700'); }, 1100); }
+    if (btn) {
+        const original = btn.innerHTML;
+        btn.innerHTML = `<svg class="icon text-emerald-400" aria-hidden="true"><use href="#icon-check"></use></svg> Adăugat (${displaySelection(grams)})`;
+        btn.classList.add('bg-emerald-700');
+        setTimeout(() => {
+            btn.innerHTML = original;
+            btn.classList.remove('bg-emerald-700');
+        }, 1100);
+    }
+};
+
+window.removeCartItem = function(pizzaId) {
+    if (cart[pizzaId]) {
+        delete cart[pizzaId];
+        saveCartToStorage();
+        updateCartUI();
+        renderModalCart();
+    }
 };
 
 const resetConfirmModal = document.getElementById("reset-confirm-modal");
@@ -530,6 +565,16 @@ const orderSubmitBtn = document.getElementById("order-submit-btn");
 const orderSubmitHelp = document.getElementById("order-submit-help");
 
 openModalBtn.addEventListener("click", () => { renderModalCart(); checkoutModal.classList.remove("hidden"); checkoutModal.classList.add("flex"); });
+const cartBarInfo = document.getElementById("cart-bar")?.querySelector(".flex.items-center.gap-3");
+if (cartBarInfo) {
+    cartBarInfo.classList.add("cursor-pointer");
+    cartBarInfo.title = "Deschide comanda";
+    cartBarInfo.addEventListener("click", () => {
+        renderModalCart();
+        checkoutModal.classList.remove("hidden");
+        checkoutModal.classList.add("flex");
+    });
+}
 function closeModal() { checkoutModal.classList.add("hidden"); checkoutModal.classList.remove("flex"); }
 closeModalBtn.addEventListener("click", closeModal);
 checkoutModal.addEventListener("click", e => { if (e.target === checkoutModal) closeModal(); });
@@ -547,9 +592,31 @@ function renderModalCart() {
     container.innerHTML = "";
     for (const id in cart) {
         const pizza = pizzas.find(p => p.id == id), grams = cart[id], cost = estimatedPizzaPrice(grams);
+        if (!pizza) continue;
+        const isWholeSingle = grams === WHOLE_PIZZA_REFERENCE_GRAMS;
+        const isWholeMultiple = grams > WHOLE_PIZZA_REFERENCE_GRAMS && (grams % WHOLE_PIZZA_REFERENCE_GRAMS === 0);
+        const wholeCount = isWholeMultiple ? (grams / WHOLE_PIZZA_REFERENCE_GRAMS) : 1;
+        const portionLabel = isWholeSingle 
+            ? 'Pizza întreagă · ≈64.00 LEI*' 
+            : (isWholeMultiple 
+                ? `${wholeCount}x Pizza întreagă · ≈${money(wholeCount * 64)} LEI*` 
+                : `${grams}g · ${money(cost)} LEI`);
+
         const row = document.createElement("div");
         row.className = "flex justify-between items-center gap-3 bg-white p-2.5 rounded-xl border border-gondola-cardBorder shadow-sm";
-        row.innerHTML = `<div><span class="font-bold text-gondola-charcoal text-xs block">${pizza.name}</span><span class="text-[11px] text-gondola-muted">${grams === WHOLE_PIZZA_REFERENCE_GRAMS ? 'Pizza întreagă · ≈64 LEI*' : `${grams}g · ${money(cost)} LEI`}</span></div><div class="flex items-center gap-1.5"><button type="button" onclick="modifyCartItem(${id},-100)" class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder font-bold">−</button><span class="text-xs font-mono font-bold min-w-14 text-center text-gondola-primary">${grams}g</span><button type="button" onclick="modifyCartItem(${id},100)" class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-bold">+</button></div>`;
+        row.innerHTML = `
+            <div class="min-w-0 pr-2">
+                <span class="font-bold text-gondola-charcoal text-xs block truncate">${pizza.name}</span>
+                <span class="text-[11px] text-gondola-muted">${portionLabel}</span>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" onclick="modifyCartItem(${id},-100)" class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder font-bold hover:border-gondola-primary text-xs flex items-center justify-center" aria-label="Scade 100g din ${pizza.name}">−</button>
+                <span class="text-xs font-mono font-bold min-w-14 text-center text-gondola-primary">${grams}g</span>
+                <button type="button" onclick="modifyCartItem(${id},100)" class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-bold hover:border-gondola-primary text-xs flex items-center justify-center" aria-label="Adaugă 100g la ${pizza.name}">+</button>
+                <button type="button" onclick="removeCartItem(${id})" class="ml-1 text-rose-500 hover:text-rose-700 p-1 transition flex items-center justify-center rounded hover:bg-rose-50" title="Elimină ${pizza.name} din coș" aria-label="Elimină ${pizza.name} din coș">
+                    <svg class="icon text-xs" aria-hidden="true"><use href="#icon-trash-can"></use></svg>
+                </button>
+            </div>`;
         container.appendChild(row);
     }
     const pizzaTotal = cartPizzaTotal(), sauceTotal = saucesTotal(), grand = pizzaTotal + sauceTotal;
@@ -614,7 +681,19 @@ orderForm.addEventListener("submit", e => {
         }
     }
     let itemsText = "", totalGrams = 0;
-    for (const id in cart) { const pizza=pizzas.find(p=>p.id==id), grams=cart[id], price=estimatedPizzaPrice(grams); totalGrams += grams; itemsText += grams === WHOLE_PIZZA_REFERENCE_GRAMS ? `• ${pizza.name} — Pizza întreagă (≈64 LEI*)\n` : `• ${pizza.name} — ${grams}g (${money(price)} LEI)\n`; }
+    for (const id in cart) {
+        const pizza = pizzas.find(p => p.id == id), grams = cart[id], price = estimatedPizzaPrice(grams);
+        if (!pizza) continue;
+        totalGrams += grams;
+        if (grams === WHOLE_PIZZA_REFERENCE_GRAMS) {
+            itemsText += `• ${pizza.name} — Pizza întreagă (≈64 LEI*)\n`;
+        } else if (grams > WHOLE_PIZZA_REFERENCE_GRAMS && grams % WHOLE_PIZZA_REFERENCE_GRAMS === 0) {
+            const count = grams / WHOLE_PIZZA_REFERENCE_GRAMS;
+            itemsText += `• ${pizza.name} — ${count}x Pizza întreagă (≈${money(count * 64)} LEI*)\n`;
+        } else {
+            itemsText += `• ${pizza.name} — ${grams}g (${money(price)} LEI)\n`;
+        }
+    }
     const pizzaTotal=cartPizzaTotal(), sauceTotal=saucesTotal(), grand=pizzaTotal+sauceTotal;
     let deliveryStatus = 'Ridicare personală';
     if (type === 'Livrare la domiciliu') { const threshold=zone==='Piatra Neamț'?PIATRA_FREE_DELIVERY_MIN:OUTSIDE_FREE_DELIVERY_MIN; deliveryStatus = grand >= threshold ? 'Livrare gratuită' : (zone==='Piatra Neamț' ? `Sub pragul orientativ de ${threshold} LEI` : 'Cost livrare de confirmat'); }
