@@ -33,6 +33,7 @@ const pizzas = [
         id: 1,
         name: "Pizza de post",
         badge: "Post / Vegetarian",
+        category: "post",
         ingredients: "Sos de roșii, ardei, dovlecel, ciuperci, porumb, roșii și măsline.",
         allergens: "Gluten",
         nutritionAnchor: "pizza-de-post",
@@ -43,6 +44,7 @@ const pizzas = [
         id: 2,
         name: "Pizza de post cu ton",
         badge: "Post cu Pește",
+        category: "post",
         ingredients: "Sos de roșii, roșii proaspete, porumb, ton și măsline.",
         allergens: "Gluten, Pește",
         nutritionAnchor: "pizza-de-post-cu-ton",
@@ -53,6 +55,7 @@ const pizzas = [
         id: 3,
         name: "Pizza Margherita cu șuncă",
         badge: "Clasic & Delicios",
+        category: "traditional",
         ingredients: "Sos de roșii, mozzarella și șuncă Praga.",
         allergens: "Gluten, Lapte",
         nutritionAnchor: "pizza-margherita-cu-sunca",
@@ -63,6 +66,7 @@ const pizzas = [
         id: 4,
         name: "Pizza Diavola",
         badge: "Spicy / Picant",
+        category: "spicy",
         ingredients: "Sos de roșii, mozzarella și salam Chorizo picant.",
         allergens: "Gluten, Lapte (urme: Soia)",
         nutritionAnchor: "pizza-diavola",
@@ -73,6 +77,7 @@ const pizzas = [
         id: 5,
         name: "Pizza Capricciosa",
         badge: "Favorit Tradițional",
+        category: "traditional",
         ingredients: "Sos de roșii, mozzarella, ciuperci, șuncă, salam și măsline.",
         allergens: "Gluten, Lapte (urme: Țelină, Muștar)",
         nutritionAnchor: "pizza-capriciosa",
@@ -83,6 +88,7 @@ const pizzas = [
         id: 6,
         name: "Pizza 4 Formaggi",
         badge: "Brânzeturi Alese",
+        category: "special",
         ingredients: "Mozzarella, gorgonzola, cașcaval afumat și parmezan.",
         allergens: "Gluten, Ouă, Lapte",
         nutritionAnchor: "pizza-4-formagi",
@@ -93,6 +99,7 @@ const pizzas = [
         id: 7,
         name: "Pizza cu ton",
         badge: "Mediteranean",
+        category: "special",
         ingredients: "Sos de roșii, mozzarella, roșii și ton.",
         allergens: "Gluten, Pește, Lapte",
         nutritionAnchor: "pizza-cu-ton",
@@ -103,6 +110,7 @@ const pizzas = [
         id: 8,
         name: "Pizza Gondola",
         badge: "Specialitatea Casei",
+        category: "traditional",
         ingredients: "Sos de roșii, mozzarella, salam de vară, șuncă Praga, ardei, roșii și măsline.",
         allergens: "Gluten, Soia, Lapte (urme: Țelină, Muștar)",
         nutritionAnchor: "pizza-gondola",
@@ -113,6 +121,7 @@ const pizzas = [
         id: 9,
         name: "Pizza ripiena cu șuncă",
         badge: "Specialitate Umplută",
+        category: "special",
         ingredients: "Mozzarella și șuncă.",
         allergens: "Gluten, Lapte",
         nutritionAnchor: "pizza-ripiena",
@@ -123,6 +132,7 @@ const pizzas = [
         id: 10,
         name: "Pizza Regina",
         badge: "Tradițional Aromat",
+        category: "traditional",
         ingredients: "Sos de roșii, mozzarella, ceafă afumată, roșii, porumb și măsline.",
         allergens: "Gluten, Soia, Lapte",
         nutritionAnchor: "pizza-regina",
@@ -133,6 +143,7 @@ const pizzas = [
         id: 11,
         name: "Pizza cu cabanos",
         badge: "Gust Rustic & Bogat",
+        category: "traditional",
         ingredients: "Sos de roșii, mozzarella, cârnați cabanos, porumb, ardei și măsline.",
         allergens: "Gluten, Soia, Lapte",
         nutritionAnchor: "pizza-cabanos",
@@ -143,6 +154,7 @@ const pizzas = [
         id: 12,
         name: "Pizza cu piept de pui",
         badge: "Gust Fin & Nutritiv",
+        category: "special",
         ingredients: "Sos de roșii, mozzarella, roșii, ardei și piept de pui.",
         allergens: "Gluten, Lapte",
         nutritionAnchor: "pizza-de-pui",
@@ -159,6 +171,50 @@ const deliveryZones = [
 const STORAGE_CART_KEY = "gondola_cart_v1";
 const STORAGE_SAUCES_KEY = "gondola_sauces_v1";
 const STORAGE_DRINKS_KEY = "gondola_drinks_v1";
+const STORAGE_CUSTOMER_KEY = "gondola_customer_v1";
+
+function triggerHaptic(duration = 40) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try { navigator.vibrate(duration); } catch (_) {}
+    }
+}
+
+function saveCustomerData() {
+    try {
+        const name = document.getElementById("cust-name")?.value.trim() || "";
+        const address = document.getElementById("cust-address")?.value.trim() || "";
+        const zone = document.getElementById("delivery-zone")?.value || "Piatra Neamț";
+        const orderType = document.querySelector('input[name="order_type"]:checked')?.value || "Livrare la domiciliu";
+        localStorage.setItem(STORAGE_CUSTOMER_KEY, JSON.stringify({ name, address, zone, orderType }));
+    } catch (_) {}
+}
+
+function loadCustomerData() {
+    try {
+        const saved = localStorage.getItem(STORAGE_CUSTOMER_KEY);
+        if (saved) {
+            const data = JSON.parse(saved);
+            if (data && typeof data === "object") {
+                if (data.name && document.getElementById("cust-name")) {
+                    document.getElementById("cust-name").value = data.name;
+                }
+                if (data.address && document.getElementById("cust-address")) {
+                    document.getElementById("cust-address").value = data.address;
+                }
+                if (data.zone && document.getElementById("delivery-zone")) {
+                    document.getElementById("delivery-zone").value = data.zone;
+                }
+                if (data.orderType) {
+                    const radio = document.querySelector(`input[name="order_type"][value="${CSS.escape(data.orderType)}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        syncDeliveryFields();
+                    }
+                }
+            }
+        }
+    } catch (_) {}
+}
 
 let cart = {};
 let selectedGrams = {};
@@ -301,6 +357,7 @@ function renderSauceQuantities() {
 }
 
 window.stepSauce = function(name, step) {
+    triggerHaptic(30);
     if (!(name in sauceQuantities)) return;
     sauceQuantities[name] = Math.max(0, sauceQuantities[name] + step);
     saveCartToStorage();
@@ -318,6 +375,7 @@ function renderDrinkQuantities() {
 }
 
 window.stepDrink = function(id, step) {
+    triggerHaptic(30);
     if (!(id in drinkQuantities)) return;
     drinkQuantities[id] = Math.max(0, drinkQuantities[id] + step);
     saveCartToStorage();
@@ -425,6 +483,23 @@ window.closeClosedWarningModal = function() {
     }
 };
 
+
+window.openOrderSuccessModal = function() {
+    const modal = document.getElementById("order-success-modal");
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    }
+};
+
+window.closeOrderSuccessModal = function() {
+    const modal = document.getElementById("order-success-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+    }
+};
+
 window.confirmPreOrder = function() {
     window.bypassClosedWarning = true;
     closeClosedWarningModal();
@@ -436,6 +511,30 @@ window.confirmPreOrder = function() {
             form.dispatchEvent(new Event('submit', { cancelable: true }));
         }
     }
+};
+
+
+window.currentMenuFilter = "all";
+window.filterMenu = function(category) {
+    window.currentMenuFilter = category;
+    triggerHaptic(35);
+    const cards = document.querySelectorAll(".product-card");
+    cards.forEach(card => {
+        if (category === "all" || card.dataset.category === category) {
+            card.style.display = "";
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    document.querySelectorAll(".menu-filter-btn").forEach(btn => {
+        const isActive = btn.dataset.filter === category;
+        if (isActive) {
+            btn.className = "menu-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-bold border transition-all duration-200 bg-gondola-primary text-white border-gondola-primary shadow-sm shadow-red-500/20";
+        } else {
+            btn.className = "menu-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-bold border transition-all duration-200 bg-white text-gondola-charcoal border-gondola-cardBorder hover:border-gondola-primary hover:text-gondola-primary shadow-sm";
+        }
+    });
 };
 
 function renderProducts() {
@@ -690,10 +789,11 @@ window.setGrams = function(pizzaId, grams) {
     [300,600,1000,1200].forEach(p => document.getElementById(`btn-g-${pizzaId}-${p}`)?.classList.toggle('active', p === grams));
 };
 
-window.stepGrams = function(pizzaId, step) { setGrams(pizzaId, (selectedGrams[pizzaId] || 300) + step); };
+window.stepGrams = function(pizzaId, step) { triggerHaptic(30); setGrams(pizzaId, (selectedGrams[pizzaId] || 300) + step); };
 
 let addToCartCooldown = false;
 window.addToCart = function(pizzaId, evt) {
+    triggerHaptic(45);
     if (addToCartCooldown) return;
     addToCartCooldown = true;
     setTimeout(() => { addToCartCooldown = false; }, 400);
@@ -717,6 +817,7 @@ window.addToCart = function(pizzaId, evt) {
 };
 
 window.removeCartItem = function(pizzaId) {
+    triggerHaptic(30);
     if (cart[pizzaId]) {
         delete cart[pizzaId];
         saveCartToStorage();
@@ -752,6 +853,7 @@ window.confirmResetCart = function() {
 };
 
 window.modifyCartItem = function(pizzaId, deltaGrams) {
+    triggerHaptic(30);
     if (!cart[pizzaId]) return;
     cart[pizzaId] += deltaGrams;
     if (cart[pizzaId] <= 0) delete cart[pizzaId];
@@ -782,7 +884,7 @@ const deliveryZone = document.getElementById("delivery-zone");
 const orderSubmitBtn = document.getElementById("order-submit-btn");
 const orderSubmitHelp = document.getElementById("order-submit-help");
 
-openModalBtn?.addEventListener("click", () => { renderModalCart(); checkoutModal.classList.remove("hidden"); checkoutModal.classList.add("flex"); });
+openModalBtn?.addEventListener("click", () => { initScheduledTimeOptions(); renderModalCart(); checkoutModal.classList.remove("hidden"); checkoutModal.classList.add("flex"); });
 const cartBarInfo = document.getElementById("cart-bar")?.querySelector(".flex.items-center.gap-3");
 if (cartBarInfo) {
     cartBarInfo.classList.add("cursor-pointer");
@@ -815,25 +917,74 @@ function initScheduledTimeOptions() {
     const sel = document.getElementById("scheduled-time");
     if (!sel) return;
     sel.innerHTML = "";
-    // Interval from 10:00 to 19:30 every 30 minutes
-    const times = [
-        "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
+
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/Bucharest",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+        weekday: "short"
+    });
+    const parts = formatter.formatToParts(now);
+    let hour = 12, minute = 0, weekday = "Mon";
+    parts.forEach(p => {
+        if (p.type === "hour") hour = parseInt(p.value, 10);
+        if (p.type === "minute") minute = parseInt(p.value, 10);
+        if (p.type === "weekday") weekday = p.value;
+    });
+
+    const isSunday = (weekday === "Sun");
+    const openMinute = isSunday ? (10 * 60 + 30) : (9 * 60 + 30); // 09:30 L-S / 10:30 D
+    const lastMinute = 19 * 60 + 30; // 19:30
+    const currentMinuteTotal = hour * 60 + minute;
+    // Minim 45 min timp de preparare & livrare
+    const minBookingMinute = Math.max(openMinute, currentMinuteTotal + 45);
+
+    const allSlots = [
+        "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
         "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
         "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
         "19:00", "19:30"
     ];
-    times.forEach(t => {
-        const opt = document.createElement("option");
-        opt.value = t;
-        opt.textContent = `Ora ${t}`;
-        sel.appendChild(opt);
-    });
+
+    let availableSlots = [];
+    if (currentMinuteTotal < lastMinute) {
+        availableSlots = allSlots.filter(t => {
+            const [h, m] = t.split(":").map(Number);
+            const slotMin = h * 60 + m;
+            return slotMin >= minBookingMinute && slotMin <= lastMinute;
+        });
+    }
+
+    if (availableSlots.length > 0) {
+        availableSlots.forEach(t => {
+            const opt = document.createElement("option");
+            opt.value = t;
+            opt.textContent = `Ora ${t} (azi)`;
+            sel.appendChild(opt);
+        });
+    } else {
+        const nextDayLabel = isSunday ? "mâine Luni" : (weekday === "Sat" ? "mâine Duminică" : "mâine");
+        const nextDayOpenMinute = (weekday === "Sat") ? (10 * 60 + 30) : (9 * 60 + 30);
+        const nextDaySlots = allSlots.filter(t => {
+            const [h, m] = t.split(":").map(Number);
+            return (h * 60 + m) >= nextDayOpenMinute;
+        });
+        nextDaySlots.forEach(t => {
+            const opt = document.createElement("option");
+            opt.value = `${t} (${nextDayLabel})`;
+            opt.textContent = `Ora ${t} (${nextDayLabel})`;
+            sel.appendChild(opt);
+        });
+    }
 }
 
 function syncOrderTimeFields() {
     const isScheduled = document.getElementById("time-scheduled")?.checked;
     const wrap = document.getElementById("scheduled-time-wrap");
     if (wrap) wrap.classList.toggle("hidden", !isScheduled);
+    if (isScheduled) initScheduledTimeOptions();
 }
 
 document.querySelectorAll('input[name="order_time_type"]').forEach(r => {
@@ -893,6 +1044,16 @@ function renderModalCart() {
     }
     document.getElementById("modal-total-price").innerText = money(grand);
     
+    const upsell = document.getElementById("smart-sauce-upsell");
+    if (upsell) {
+        const hasPizzas = Object.keys(cart).length > 0;
+        if (hasPizzas && sauceTotal === 0) {
+            upsell.classList.remove("hidden");
+        } else {
+            upsell.classList.add("hidden");
+        }
+    }
+
     updateDeliveryProgress(pizzaTotal);
     updateOrderSubmitState(pizzaTotal);
 }
@@ -1042,11 +1203,31 @@ orderForm?.addEventListener("submit", e => {
     if (!sched.isOpen) message += `⚠️ *Notă:* Comandă plasată în afara programului cuptorului (pre-comandă pentru când deschideți - ${sched.nextOpenText || "în timpul programului"}).\n`;
     message += `\n*Notă:* Pentru pizza întreagă, prețul este orientativ (5,70 LEI/100g); greutatea reală poate varia cu aprox. ±100g, iar prețul final se confirmă pe bonul fiscal după cântărire.`;
 
+    saveCustomerData();
+    closeModal();
     window.open(`https://wa.me/${PIZZERIA_WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank");
+    openOrderSuccessModal();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
     loadCartFromStorage();
+    loadCustomerData();
+
+    // Auto-save customer details
+    ["cust-name", "cust-address"].forEach(id => {
+        document.getElementById(id)?.addEventListener("input", saveCustomerData);
+    });
+    document.getElementById("delivery-zone")?.addEventListener("change", saveCustomerData);
+    document.querySelectorAll('input[name="order_type"]').forEach(r => {
+        r.addEventListener("change", saveCustomerData);
+    });
+
+    // PWA Service Worker Registration
+    if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./sw.js").catch(() => {});
+        });
+    }
     renderProducts();
     renderSauceQuantities();
     renderDrinkQuantities();

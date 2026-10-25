@@ -41,7 +41,11 @@
 
     <!-- Favicon & Touch Icon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="apple-touch-icon" href="images/how-it-works/step-4.jpg">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Gondola">
 
     <!-- Schema.org JSON-LD Structured Data (@graph for Google Knowledge Graph, Local SEO & LLM Discovery) -->
     <script type="application/ld+json">
@@ -935,7 +939,7 @@ body {
 
     <!-- Main Section: cele 12 Pizza din Meniul Gondola (Carduri cu nuanță diferită de fundal) -->
     <main id="meniu" class="py-16 md:py-24 max-w-[1550px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="text-center max-w-2xl mx-auto mb-10 md:mb-12">
             <span class="text-xs font-extrabold uppercase tracking-widest text-gondola-primary bg-rose-100/70 border border-rose-200 px-3.5 py-1 rounded-full">
                 Meniu Oficial Gondola
             </span>
@@ -945,6 +949,15 @@ body {
             <p class="text-gondola-muted text-sm md:text-base leading-relaxed">
                 Fiecare sortiment este tăiat la comandă din tava proaspăt scoasă din cuptor. Alege 300g, 600g, 1kg sau o pizza întreagă, personalizează cu sosuri și trimite comanda direct pe WhatsApp.
             </p>
+        </div>
+
+        <!-- Filtre Rapide Meniu (Pill Buttons) -->
+        <div id="menu-filters" class="flex flex-wrap justify-center items-center gap-2 sm:gap-2.5 mb-10 md:mb-14">
+            <button type="button" onclick="filterMenu('all')" data-filter="all" class="menu-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-bold border transition-all duration-200 bg-gondola-primary text-white border-gondola-primary shadow-sm shadow-red-500/20">Toate (12)</button>
+            <button type="button" onclick="filterMenu('post')" data-filter="post" class="menu-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-bold border transition-all duration-200 bg-white text-gondola-charcoal border-gondola-cardBorder hover:border-gondola-primary hover:text-gondola-primary shadow-sm">Post / Vegetariene</button>
+            <button type="button" onclick="filterMenu('spicy')" data-filter="spicy" class="menu-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-bold border transition-all duration-200 bg-white text-gondola-charcoal border-gondola-cardBorder hover:border-gondola-primary hover:text-gondola-primary shadow-sm">Picante</button>
+            <button type="button" onclick="filterMenu('traditional')" data-filter="traditional" class="menu-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-bold border transition-all duration-200 bg-white text-gondola-charcoal border-gondola-cardBorder hover:border-gondola-primary hover:text-gondola-primary shadow-sm">Tradiționale</button>
+            <button type="button" onclick="filterMenu('special')" data-filter="special" class="menu-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-bold border transition-all duration-200 bg-white text-gondola-charcoal border-gondola-cardBorder hover:border-gondola-primary hover:text-gondola-primary shadow-sm">Specialități</button>
         </div>
 
         <!-- 12 Products Container (Alternare Video Stanga/Dreapta) -->
@@ -1398,6 +1411,21 @@ body {
                         <div id="address-field">
                             <label class="block text-xs font-bold text-gondola-charcoal mb-1">Adresă livrare *</label>
                             <textarea id="cust-address" required rows="2" placeholder="Strada, Număr, Bloc, Scara, Ap, Interfon..." class="w-full bg-gondola-base border border-gondola-cardBorder rounded-xl px-4 py-2 text-sm text-gondola-charcoal focus:outline-none focus:border-gondola-primary"></textarea>
+                            <p class="text-[10px] text-emerald-700 font-medium mt-1 flex items-center gap-1"><svg class="icon text-xs"><use href="#icon-check"></use></svg> Datele tale de livrare sunt memorate automat pe telefon.</p>
+                        </div>
+                    </div>
+
+                    <!-- Smart Upsell Banner (Sosuri) -->
+                    <div id="smart-sauce-upsell" class="hidden p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-base">🥫</span>
+                            <span class="text-xs font-bold text-amber-950">Ai uitat sosul pentru pizza?</span>
+                        </div>
+                        <p class="text-[11px] text-amber-900 mb-2">O pizza crocantă merge de minune cu un sos proaspăt preparat:</p>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button type="button" onclick="stepSauce('Sos roșii dulce', 1)" class="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-[11px] font-bold shadow-sm transition">+ Sos dulce (2 lei)</button>
+                            <button type="button" onclick="stepSauce('Sos roșii picant', 1)" class="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-[11px] font-bold shadow-sm transition">+ Sos picant (2 lei)</button>
+                            <button type="button" onclick="stepSauce('Sos maioneză cu usturoi', 1)" class="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-lg text-[11px] font-bold shadow-sm transition">+ Sos usturoi (1 leu)</button>
                         </div>
                     </div>
 
@@ -1667,6 +1695,35 @@ body {
                     <svg class="icon text-base" aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Trimite oricum
                 </button>
             </div>
+        </div>
+    </div>
+
+    
+    <!-- MODAL PERSONALIZAT: Confirmare Comandă & Recenzie Google -->
+    <div id="order-success-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white border border-gondola-cardBorder rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center transform transition-all">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-3 border border-emerald-200">
+                <svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>
+            </div>
+            <h2 class="text-xl font-black text-gondola-charcoal font-display mb-1.5">Comandă trimisă cu succes!</h2>
+            <p class="text-xs text-gondola-muted mb-4 leading-relaxed">
+                Comanda ta a fost direcționată pe WhatsApp. Colegii noștri de la <strong>Pizzeria Gondola</strong> îți vor confirma prețul și timpul de livrare în câteva minute.
+            </p>
+            <div class="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-3.5 mb-5 text-left">
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span class="text-amber-500 text-sm">⭐⭐⭐⭐⭐</span>
+                    <span class="text-xs font-black text-gondola-charcoal">Îți place pizza noastră?</span>
+                </div>
+                <p class="text-[11px] text-gondola-muted mb-2.5 leading-relaxed">
+                    Fiecare recenzie ne ajută enorm ca pizzerie artizanală locală. Lasă-ne 5 stele pe Google Maps:
+                </p>
+                <a href="https://maps.google.com/?q=Pizzeria+Gondola+Bulevardul+Decebal+35+Piatra+Neam%C8%9B" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full py-2.5 px-3 bg-white hover:bg-amber-100 text-amber-950 font-black text-xs rounded-xl border border-amber-300 shadow-sm transition">
+                    <svg class="icon text-base text-[#4285F4]" aria-hidden="true"><use href="#icon-map-location-dot"></use></svg> Lasă o Recenzie pe Google
+                </a>
+            </div>
+            <button type="button" onclick="closeOrderSuccessModal()" class="w-full py-2.5 px-4 rounded-xl bg-gondola-charcoal hover:bg-slate-800 font-bold text-xs text-white transition">
+                Închide
+            </button>
         </div>
     </div>
 
