@@ -547,6 +547,7 @@ function renderProducts() {
         const whole = grams === WHOLE_PIZZA_REFERENCE_GRAMS;
         const card = document.createElement("div");
         card.id = `product-${pizza.id}`;
+        card.dataset.category = pizza.category || "all";
         card.className = "product-card bg-gondola-cardBg border-2 border-gondola-cardBorder rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 lg:p-10 shadow-xl";
         card.innerHTML = `
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
@@ -1222,10 +1223,12 @@ document.addEventListener("DOMContentLoaded", () => {
         r.addEventListener("change", saveCustomerData);
     });
 
-    // PWA Service Worker Registration
-    if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
-        window.addEventListener("load", () => {
-            navigator.serviceWorker.register("./sw.js").catch(() => {});
+    // Cleanup any existing service workers
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (const registration of registrations) {
+                registration.unregister();
+            }
         });
     }
     renderProducts();
