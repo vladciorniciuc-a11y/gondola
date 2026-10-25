@@ -1,6 +1,7 @@
 const PRICE_PER_100G = 5.70;
 const WHOLE_PIZZA_REFERENCE_GRAMS = 1200;
 const WHOLE_PIZZA_DISPLAY_PRICE = 68.40;
+const MIN_GRAMS_PER_ITEM = 300;
 const BOX_PRICE = 1.00;
 const PIZZERIA_WHATSAPP = "40747216161";
 const PIATRA_FREE_DELIVERY_MIN = 68.40; // 1 pizza întreagă
@@ -244,7 +245,14 @@ function loadCartFromStorage() {
         const savedCart = localStorage.getItem(STORAGE_CART_KEY);
         if (savedCart) {
             const parsed = JSON.parse(savedCart);
-            if (parsed && typeof parsed === "object") cart = parsed;
+            if (parsed && typeof parsed === "object") {
+                cart = {};
+                Object.entries(parsed).forEach(([k, grams]) => {
+                    if (typeof grams === "number" && grams > 0) {
+                        cart[k] = Math.max(MIN_GRAMS_PER_ITEM, grams);
+                    }
+                });
+            }
         }
         const savedSauces = localStorage.getItem(STORAGE_SAUCES_KEY);
         if (savedSauces) {
@@ -591,7 +599,7 @@ function renderProducts() {
                             </div>
                             <div class="flex items-center justify-between bg-white border border-gondola-cardBorder rounded-xl px-3 py-2 shadow-sm">
                                 <span class="text-[11px] text-gondola-muted font-semibold flex items-center gap-1"><svg class="icon text-gondola-accent" aria-hidden="true"><use href="#icon-scale-balanced"></use></svg> Ajustare 100g:</span>
-                                <div class="flex items-center gap-1.5"><button type="button" onclick="stepGrams(${pizza.id},-100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder font-black" aria-label="Scade 100g din cantitatea de ${pizza.name}">−</button><span id="counter-grams-${pizza.id}" class="text-xs font-mono font-bold text-gondola-charcoal min-w-16 text-center">${grams}g</span><button type="button" onclick="stepGrams(${pizza.id},100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-black" aria-label="Adaugă 100g la cantitatea de ${pizza.name}">+</button></div>
+                                <div class="flex items-center gap-1.5"><button type="button" id="btn-minus-${pizza.id}" onclick="stepGrams(${pizza.id},-100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder font-black transition" aria-label="Scade 100g din cantitatea de ${pizza.name}">−</button><span id="counter-grams-${pizza.id}" class="text-xs font-mono font-bold text-gondola-charcoal min-w-16 text-center">${grams}g</span><button type="button" onclick="stepGrams(${pizza.id},100)" class="w-7 h-7 rounded-lg bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-black" aria-label="Adaugă 100g la cantitatea de ${pizza.name}">+</button></div>
                             </div>
                             <p id="whole-note-${pizza.id}" class="${whole ? '' : 'hidden'} mt-2 text-[10px] leading-relaxed text-gondola-muted">* Preț orientativ. Pizza este cântărită, iar prețul final poate varia în funcție de gramajul real (aprox. ±100g).</p>
                         </div>
@@ -779,7 +787,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 window.setGrams = function(pizzaId, grams) {
-    grams = Math.max(100, grams);
+    grams = Math.max(MIN_GRAMS_PER_ITEM, grams);
     selectedGrams[pizzaId] = grams;
     const whole = grams === WHOLE_PIZZA_REFERENCE_GRAMS;
     document.getElementById(`grams-label-${pizzaId}`)?.replaceChildren(document.createTextNode(displaySelection(grams)));
@@ -788,9 +796,23 @@ window.setGrams = function(pizzaId, grams) {
     if (subtotal) subtotal.innerText = whole ? "≈ 68.40 LEI*" : `${money(estimatedPizzaPrice(grams))} LEI`;
     document.getElementById(`whole-note-${pizzaId}`)?.classList.toggle('hidden', !whole);
     [300,600,1000,1200].forEach(p => document.getElementById(`btn-g-${pizzaId}-${p}`)?.classList.toggle('active', p === grams));
+
+    const minusBtn = document.getElementById(`btn-minus-${pizzaId}`);
+    if (minusBtn) {
+        const isMin = grams <= MIN_GRAMS_PER_ITEM;
+        minusBtn.disabled = isMin;
+        minusBtn.classList.toggle('opacity-30', isMin);
+        minusBtn.classList.toggle('cursor-not-allowed', isMin);
+        minusBtn.title = isMin ? "Gramajul minim pe sortiment este de 300g" : `Scade 100g din cantitatea selectată`;
+    }
 };
 
-window.stepGrams = function(pizzaId, step) { triggerHaptic(30); setGrams(pizzaId, (selectedGrams[pizzaId] || 300) + step); };
+window.stepGrams = function(pizzaId, step) {
+    triggerHaptic(30);
+    const current = selectedGrams[pizzaId] || MIN_GRAMS_PER_ITEM;
+    if (step < 0 && current <= MIN_GRAMS_PER_ITEM) return;
+    setGrams(pizzaId, Math.max(MIN_GRAMS_PER_ITEM, current + step));
+};
 
 let addToCartCooldown = false;
 window.addToCart = function(pizzaId, evt) {
@@ -799,7 +821,7 @@ window.addToCart = function(pizzaId, evt) {
     addToCartCooldown = true;
     setTimeout(() => { addToCartCooldown = false; }, 400);
 
-    const grams = selectedGrams[pizzaId] || 300;
+    const grams = Math.max(MIN_GRAMS_PER_ITEM, selectedGrams[pizzaId] || MIN_GRAMS_PER_ITEM);
     cart[pizzaId] = (cart[pizzaId] || 0) + grams;
     saveCartToStorage();
     updateCartUI();
@@ -856,8 +878,16 @@ window.confirmResetCart = function() {
 window.modifyCartItem = function(pizzaId, deltaGrams) {
     triggerHaptic(30);
     if (!cart[pizzaId]) return;
-    cart[pizzaId] += deltaGrams;
-    if (cart[pizzaId] <= 0) delete cart[pizzaId];
+    if (deltaGrams < 0 && cart[pizzaId] <= MIN_GRAMS_PER_ITEM) {
+        // Nu permite scăderea sub 300g; pentru eliminare se folosește iconița de coș de gunoi
+        return;
+    }
+    const targetGrams = cart[pizzaId] + deltaGrams;
+    if (targetGrams < MIN_GRAMS_PER_ITEM) {
+        cart[pizzaId] = MIN_GRAMS_PER_ITEM;
+    } else {
+        cart[pizzaId] = targetGrams;
+    }
     saveCartToStorage();
     updateCartUI();
     renderModalCart();
@@ -1008,6 +1038,7 @@ function renderModalCart() {
                 ? `${wholeCount}x Pizza întreagă · ≈${money(wholeCount * WHOLE_PIZZA_DISPLAY_PRICE)} LEI*` 
                 : `${grams}g · ${money(cost)} LEI`);
 
+        const isMin = grams <= MIN_GRAMS_PER_ITEM;
         const row = document.createElement("div");
         row.className = "flex justify-between items-center gap-3 bg-white p-2.5 rounded-xl border border-gondola-cardBorder shadow-sm";
         row.innerHTML = `
@@ -1016,9 +1047,14 @@ function renderModalCart() {
                 <span class="text-[11px] text-gondola-muted">${portionLabel}</span>
             </div>
             <div class="flex items-center gap-1.5 shrink-0">
-                <button type="button" onclick="modifyCartItem(${id},-100)" class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder font-bold hover:border-gondola-primary text-xs flex items-center justify-center" aria-label="Scade 100g din ${pizza.name}">−</button>
+                <button type="button" 
+                    onclick="${isMin ? '' : `modifyCartItem(${id},-100)`}" 
+                    ${isMin ? 'disabled' : ''} 
+                    class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder font-bold text-xs flex items-center justify-center transition ${isMin ? 'opacity-30 cursor-not-allowed text-gondola-muted' : 'hover:border-gondola-primary text-gondola-charcoal'}" 
+                    title="${isMin ? 'Gramajul minim pe sortiment este de 300g (folosește coșul de gunoi pentru a elimina)' : `Scade 100g din ${pizza.name}`}"
+                    aria-label="Scade 100g din ${pizza.name}">−</button>
                 <span class="text-xs font-mono font-bold min-w-14 text-center text-gondola-primary">${grams}g</span>
-                <button type="button" onclick="modifyCartItem(${id},100)" class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-bold hover:border-gondola-primary text-xs flex items-center justify-center" aria-label="Adaugă 100g la ${pizza.name}">+</button>
+                <button type="button" onclick="modifyCartItem(${id},100)" class="w-6 h-6 rounded bg-gondola-cardBg border border-gondola-cardBorder text-gondola-primary font-bold hover:border-gondola-primary text-xs flex items-center justify-center transition" title="Adaugă 100g la ${pizza.name}" aria-label="Adaugă 100g la ${pizza.name}">+</button>
                 <button type="button" onclick="removeCartItem(${id})" class="ml-1 text-rose-500 hover:text-rose-700 p-1 transition flex items-center justify-center rounded hover:bg-rose-50" title="Elimină ${pizza.name} din coș" aria-label="Elimină ${pizza.name} din coș">
                     <svg class="icon text-xs" aria-hidden="true"><use href="#icon-trash-can"></use></svg>
                 </button>
@@ -1115,6 +1151,22 @@ function updateOrderSubmitState(pizzaTotal) {
 orderForm?.addEventListener("submit", e => {
     e.preventDefault();
     if (!Object.keys(cart).length) return alert("Te rugăm să alegi cel puțin un sortiment de pizza în comandă.");
+
+    // Regula site-wide: gramaj minim 300g per sortiment
+    let hasUnderMin = false;
+    for (const id in cart) {
+        if (typeof cart[id] === "number" && cart[id] < MIN_GRAMS_PER_ITEM) {
+            cart[id] = MIN_GRAMS_PER_ITEM;
+            hasUnderMin = true;
+        }
+    }
+    if (hasUnderMin) {
+        saveCartToStorage();
+        updateCartUI();
+        renderModalCart();
+        alert("Gramajul minim pe sortiment este de 300g (o porție / felie). Am ajustat cantitatea la 300g.");
+        return;
+    }
     
     // Check if open or show warning
     const sched = getPizzeriaScheduleStatus();
