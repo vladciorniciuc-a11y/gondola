@@ -83,7 +83,7 @@ const pizzas = [
         id: 6,
         name: "Pizza 4 Formaggi",
         badge: "Brânzeturi Alese",
-        ingredients: "Mozzarella, gorgonzola, brânză afumată și parmezan.",
+        ingredients: "Mozzarella, gorgonzola, cașcaval afumat și parmezan.",
         allergens: "Gluten, Ouă, Lapte",
         nutritionAnchor: "pizza-4-formagi",
         videoPoster: "images/posters/pizza_4_formaggi.webp",
