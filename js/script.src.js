@@ -345,6 +345,7 @@ function getPizzeriaScheduleStatus() {
     const isSunday = (weekday === "Sun");
     const openHour = isSunday ? 10 : 9;
     const lastOrderMinuteTotal = (19 * 60) + 30; // 19:30
+    const closeMinuteTotal = 20 * 60; // 20:00
     const currentMinuteTotal = (hour * 60) + minute;
     const openMinuteTotal = openHour * 60;
 
@@ -353,35 +354,64 @@ function getPizzeriaScheduleStatus() {
 
     let statusText = "";
     let badgeClass = "";
+    let nextOpenText = "";
+
     if (isOpen) {
         if (isClosingSoon) {
-            statusText = "🟢 Deschis • Ultima comandă până la 19:30!";
-            badgeClass = "bg-amber-100 text-amber-900 border-amber-300";
+            statusText = "Ultima comandă până la 19:30!";
+            badgeClass = "bg-amber-50 text-amber-900 border-amber-300";
         } else {
-            statusText = "🟢 Deschis acum • Comenzi până la 19:30";
-            badgeClass = "bg-emerald-100 text-emerald-900 border-emerald-300";
+            statusText = "Deschis acum • Comenzi până la 19:30";
+            badgeClass = "bg-emerald-50 text-emerald-900 border-emerald-300";
         }
     } else {
-        const nextOpen = isSunday ? "mâine (Luni) la 09:00" : (weekday === "Sat" ? "mâine (Duminică) la 10:00" : "mâine la 09:00");
-        statusText = `🔴 Închis acum • Deschidem ${nextOpen}`;
-        badgeClass = "bg-rose-100 text-rose-900 border-rose-300";
+        badgeClass = "bg-rose-50 text-rose-900 border-rose-200";
+        if (currentMinuteTotal < openMinuteTotal) {
+            // Este dimineață înainte de ora deschiderii de azi
+            const todayOpenHourStr = isSunday ? "10:00" : "09:00";
+            nextOpenText = `astăzi la ${todayOpenHourStr}`;
+            statusText = `Închis acum • Deschidem azi la ${todayOpenHourStr}`;
+        } else {
+            // Este după ultima comandă (19:30) / închidere (20:00) pe ziua în curs
+            if (isSunday) {
+                nextOpenText = "mâine (Luni) la 09:00";
+            } else if (weekday === "Sat") {
+                nextOpenText = "mâine (Duminică) la 10:00";
+            } else {
+                nextOpenText = "mâine la 09:00";
+            }
+
+            if (currentMinuteTotal < closeMinuteTotal) {
+                statusText = `Comenzi oprite azi • Deschidem ${nextOpenText}`;
+            } else {
+                statusText = `Închis acum • Deschidem ${nextOpenText}`;
+            }
+        }
     }
 
-    return { isOpen, isClosingSoon, statusText, badgeClass };
+    return { isOpen, isClosingSoon, statusText, badgeClass, nextOpenText };
 }
 
 function updateLiveScheduleBadge() {
     const sched = getPizzeriaScheduleStatus();
     const badge = document.getElementById("live-schedule-badge");
     if (badge) {
-        badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full mr-1.5 ${sched.isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}"></span>${sched.statusText}`;
-        badge.className = `inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border transition ${sched.badgeClass}`;
+        const dotColor = sched.isOpen 
+            ? (sched.isClosingSoon ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500 animate-pulse') 
+            : 'bg-rose-500';
+        badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full mr-1.5 ${dotColor}"></span>${sched.statusText}`;
+        badge.className = `inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold border transition ${sched.badgeClass}`;
     }
 }
 
 window.openClosedWarningModal = function() {
     const modal = document.getElementById("closed-warning-modal");
     if (modal) {
+        const sched = getPizzeriaScheduleStatus();
+        const nextBadge = document.getElementById("closed-modal-next-open-badge");
+        if (nextBadge && sched.nextOpenText) {
+            nextBadge.innerHTML = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300"><svg class="icon text-amber-700" aria-hidden="true"><use href="#icon-clock"></use></svg> Deschidem ${sched.nextOpenText}</span>`;
+        }
         modal.classList.remove("hidden");
         modal.classList.add("flex");
     }
@@ -1009,7 +1039,7 @@ orderForm?.addEventListener("submit", e => {
     message += `🕒 *Timp dorit:* ${timeText}\n`;
     message += `💵 *Plată:* ${payment}\n`;
     if (notes) message += `📝 *Mențiuni:* ${notes}\n`;
-    if (!sched.isOpen) message += `⚠️ *Notă:* Comandă plasată în afara programului cuptorului (pre-comandă).\n`;
+    if (!sched.isOpen) message += `⚠️ *Notă:* Comandă plasată în afara programului cuptorului (pre-comandă pentru când deschideți - ${sched.nextOpenText || "în timpul programului"}).\n`;
     message += `\n*Notă:* Pentru pizza întreagă, prețul este orientativ (5,70 LEI/100g); greutatea reală poate varia cu aprox. ±100g, iar prețul final se confirmă pe bonul fiscal după cântărire.`;
 
     window.open(`https://wa.me/${PIZZERIA_WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank");
