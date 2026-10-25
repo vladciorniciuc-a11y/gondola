@@ -1,14 +1,32 @@
-const PRICE_PER_100G = 5.30;
+const PRICE_PER_100G = 5.70;
 const WHOLE_PIZZA_REFERENCE_GRAMS = 1200;
-const WHOLE_PIZZA_DISPLAY_PRICE = 64.00;
+const WHOLE_PIZZA_DISPLAY_PRICE = 68.40;
+const BOX_PRICE = 1.00;
+const PIZZERIA_WHATSAPP = "40747216161";
+const PIATRA_FREE_DELIVERY_MIN = 68.40; // 1 pizza întreagă
+const OUTSIDE_FREE_DELIVERY_MIN = 136.80; // 2 pizza întregi
+
 const SAUCE_PRICES = {
     "Sos roșii dulce": 2.00,
     "Sos roșii picant": 2.00,
     "Sos maioneză cu usturoi": 1.00
 };
-const PIZZERIA_WHATSAPP = "40747216161";
-const PIATRA_FREE_DELIVERY_MIN = 64.00;
-const OUTSIDE_FREE_DELIVERY_MIN = 100.00;
+
+const DRINKS = [
+    { id: "apa-minerala", name: "Apă minerală 0.5L", price: 5.50, img: "images/bauturi/apa-minerala.webp", badge: "0.5L · Sticlă" },
+    { id: "apa-plata", name: "Apă plată 0.5L", price: 5.50, img: "images/bauturi/apa-plata.webp", badge: "0.5L · Sticlă" },
+    { id: "pepsi", name: "Pepsi 0.5L", price: 8.50, img: "images/bauturi/pepsi.webp", badge: "0.5L · PET" },
+    { id: "mirinda", name: "Mirinda 0.5L", price: 8.50, img: "images/bauturi/mirinda.webp", badge: "0.5L · PET" },
+    { id: "7up", name: "7 UP 0.5L", price: 8.50, img: "images/bauturi/7up.webp", badge: "0.5L · PET" },
+    { id: "mountain-dew", name: "Mountain Dew 0.5L", price: 8.50, img: "images/bauturi/mountain-dew.webp", badge: "0.5L · PET" },
+    { id: "lipton", name: "Lipton Ice Tea 0.5L", price: 8.50, img: "images/bauturi/lipton.webp", badge: "0.5L · PET" },
+    { id: "prigat", name: "Prigat 0.5L", price: 8.50, img: "images/bauturi/prigat.webp", badge: "0.5L · PET" },
+    { id: "bere-ciuc", name: "Bere Ciuc 0.5L", price: 8.50, img: "images/bauturi/bere-ciuc.webp", badge: "0.5L · Sticlă" },
+    { id: "birra-moretti", name: "Birra Moretti 0.5L", price: 8.50, img: "images/bauturi/birra-moretti.webp", badge: "0.5L · Sticlă" },
+    { id: "bere-heineken", name: "Bere Heineken 0.4L", price: 8.50, img: "images/bauturi/heineken.webp", badge: "0.4L · Sticlă" },
+    { id: "ciuc-radler", name: "Ciuc Radler 0.5L", price: 8.50, img: "images/bauturi/ciuc-radler.webp", badge: "0.5L · Sticlă" },
+    { id: "birra-moretti-doza", name: "Birra Moretti Doză 0.5L", price: 8.50, img: "images/bauturi/birra-moretti-doza.webp", badge: "0.5L · Doză" }
+];
 
 const pizzas = [
     {
@@ -140,15 +158,28 @@ const deliveryZones = [
 
 const STORAGE_CART_KEY = "gondola_cart_v1";
 const STORAGE_SAUCES_KEY = "gondola_sauces_v1";
+const STORAGE_DRINKS_KEY = "gondola_drinks_v1";
 
 let cart = {};
 let selectedGrams = {};
 pizzas.forEach(p => selectedGrams[p.id] = 300);
 
+const sauceQuantities = {
+    "Sos roșii dulce": 0,
+    "Sos roșii picant": 0,
+    "Sos maioneză cu usturoi": 0
+};
+
+const drinkQuantities = {};
+DRINKS.forEach(d => drinkQuantities[d.id] = 0);
+
+window.bypassClosedWarning = false;
+
 function saveCartToStorage() {
     try {
         localStorage.setItem(STORAGE_CART_KEY, JSON.stringify(cart));
         localStorage.setItem(STORAGE_SAUCES_KEY, JSON.stringify(sauceQuantities));
+        localStorage.setItem(STORAGE_DRINKS_KEY, JSON.stringify(drinkQuantities));
     } catch (_) {}
 }
 
@@ -168,11 +199,26 @@ function loadCartFromStorage() {
                 });
             }
         }
+        const savedDrinks = localStorage.getItem(STORAGE_DRINKS_KEY);
+        if (savedDrinks) {
+            const parsedDrinks = JSON.parse(savedDrinks);
+            if (parsedDrinks && typeof parsedDrinks === "object") {
+                Object.keys(drinkQuantities).forEach(k => {
+                    if (typeof parsedDrinks[k] === "number") drinkQuantities[k] = parsedDrinks[k];
+                });
+            }
+        }
     } catch (_) {}
 }
 
 function money(value) { return Number(value).toFixed(2); }
-function displaySelection(grams) { return grams === WHOLE_PIZZA_REFERENCE_GRAMS ? "Pizza întreagă" : `${grams >= 1000 ? (grams/1000).toLocaleString('ro-RO', {maximumFractionDigits: 1}) + ' kg' : grams + ' g'}`; }
+
+function displaySelection(grams) {
+    return grams === WHOLE_PIZZA_REFERENCE_GRAMS 
+        ? "Pizza întreagă" 
+        : `${grams >= 1000 ? (grams/1000).toLocaleString('ro-RO', {maximumFractionDigits: 1}) + ' kg' : grams + ' g'}`;
+}
+
 function estimatedPizzaPrice(grams) {
     if (grams === WHOLE_PIZZA_REFERENCE_GRAMS) return WHOLE_PIZZA_DISPLAY_PRICE;
     if (grams > WHOLE_PIZZA_REFERENCE_GRAMS && grams % WHOLE_PIZZA_REFERENCE_GRAMS === 0) {
@@ -180,17 +226,34 @@ function estimatedPizzaPrice(grams) {
     }
     return grams * PRICE_PER_100G / 100;
 }
-function cartPizzaTotal() { return Object.values(cart).reduce((sum, grams) => sum + estimatedPizzaPrice(grams), 0); }
-function cartTotalGrams() { return Object.values(cart).reduce((sum, grams) => sum + grams, 0); }
-const sauceQuantities = {
-    "Sos roșii dulce": 0,
-    "Sos roșii picant": 0,
-    "Sos maioneză cu usturoi": 0
-};
+
+function cartPizzaTotal() {
+    return Object.values(cart).reduce((sum, grams) => sum + estimatedPizzaPrice(grams), 0);
+}
+
+function cartTotalGrams() {
+    return Object.values(cart).reduce((sum, grams) => sum + grams, 0);
+}
+
+function cartBoxCount() {
+    let boxes = 0;
+    for (const id in cart) {
+        const grams = cart[id];
+        if (grams > 0) {
+            boxes += Math.max(1, Math.round(grams / WHOLE_PIZZA_REFERENCE_GRAMS));
+        }
+    }
+    return boxes;
+}
+
+function cartBoxTotal() {
+    return cartBoxCount() * BOX_PRICE;
+}
 
 function sauceSlug(name) {
     return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
+
 function selectedSauces() {
     return Object.entries(sauceQuantities)
         .filter(([, quantity]) => quantity > 0)
@@ -199,10 +262,35 @@ function selectedSauces() {
             return { name, quantity, unitPrice, subtotal: quantity * unitPrice };
         });
 }
+
 function saucesTotal() {
     return selectedSauces().reduce((sum, sauce) => sum + sauce.subtotal, 0);
 }
-function estimatedGrandTotal() { return cartPizzaTotal() + saucesTotal(); }
+
+function selectedDrinks() {
+    return Object.entries(drinkQuantities)
+        .filter(([, quantity]) => quantity > 0)
+        .map(([id, quantity]) => {
+            const drink = DRINKS.find(d => d.id === id);
+            const unitPrice = drink ? drink.price : 8.50;
+            return {
+                id,
+                name: drink ? drink.name : id,
+                quantity,
+                unitPrice,
+                subtotal: quantity * unitPrice
+            };
+        });
+}
+
+function drinksTotal() {
+    return selectedDrinks().reduce((sum, d) => sum + d.subtotal, 0);
+}
+
+function estimatedGrandTotal() {
+    return cartPizzaTotal() + saucesTotal() + drinksTotal() + cartBoxTotal();
+}
+
 function renderSauceQuantities() {
     Object.entries(sauceQuantities).forEach(([name, quantity]) => {
         const qty = document.getElementById(`sauce-qty-${sauceSlug(name)}`);
@@ -211,6 +299,7 @@ function renderSauceQuantities() {
         if (row) row.classList.toggle("sauce-selected", quantity > 0);
     });
 }
+
 window.stepSauce = function(name, step) {
     if (!(name in sauceQuantities)) return;
     sauceQuantities[name] = Math.max(0, sauceQuantities[name] + step);
@@ -219,8 +308,109 @@ window.stepSauce = function(name, step) {
     renderModalCart();
 };
 
+function renderDrinkQuantities() {
+    Object.entries(drinkQuantities).forEach(([id, quantity]) => {
+        const qty = document.getElementById(`drink-qty-${id}`);
+        if (qty) qty.textContent = quantity;
+        const row = document.querySelector(`.drink-card[data-drink="${CSS.escape(id)}"]`);
+        if (row) row.classList.toggle("drink-selected", quantity > 0);
+    });
+}
+
+window.stepDrink = function(id, step) {
+    if (!(id in drinkQuantities)) return;
+    drinkQuantities[id] = Math.max(0, drinkQuantities[id] + step);
+    saveCartToStorage();
+    renderDrinkQuantities();
+    renderModalCart();
+};
+
+function getPizzeriaScheduleStatus() {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/Bucharest",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+        weekday: "short"
+    });
+    const parts = formatter.formatToParts(now);
+    let hour = 12, minute = 0, weekday = "Mon";
+    parts.forEach(p => {
+        if (p.type === "hour") hour = parseInt(p.value, 10);
+        if (p.type === "minute") minute = parseInt(p.value, 10);
+        if (p.type === "weekday") weekday = p.value;
+    });
+
+    const isSunday = (weekday === "Sun");
+    const openHour = isSunday ? 10 : 9;
+    const lastOrderMinuteTotal = (19 * 60) + 30; // 19:30
+    const currentMinuteTotal = (hour * 60) + minute;
+    const openMinuteTotal = openHour * 60;
+
+    const isOpen = (currentMinuteTotal >= openMinuteTotal && currentMinuteTotal < lastOrderMinuteTotal);
+    const isClosingSoon = (isOpen && currentMinuteTotal >= (19 * 60));
+
+    let statusText = "";
+    let badgeClass = "";
+    if (isOpen) {
+        if (isClosingSoon) {
+            statusText = "🟢 Deschis • Ultima comandă până la 19:30!";
+            badgeClass = "bg-amber-100 text-amber-900 border-amber-300";
+        } else {
+            statusText = "🟢 Deschis acum • Comenzi până la 19:30";
+            badgeClass = "bg-emerald-100 text-emerald-900 border-emerald-300";
+        }
+    } else {
+        const nextOpen = isSunday ? "mâine (Luni) la 09:00" : (weekday === "Sat" ? "mâine (Duminică) la 10:00" : "mâine la 09:00");
+        statusText = `🔴 Închis acum • Deschidem ${nextOpen}`;
+        badgeClass = "bg-rose-100 text-rose-900 border-rose-300";
+    }
+
+    return { isOpen, isClosingSoon, statusText, badgeClass };
+}
+
+function updateLiveScheduleBadge() {
+    const sched = getPizzeriaScheduleStatus();
+    const badge = document.getElementById("live-schedule-badge");
+    if (badge) {
+        badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full mr-1.5 ${sched.isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}"></span>${sched.statusText}`;
+        badge.className = `inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border transition ${sched.badgeClass}`;
+    }
+}
+
+window.openClosedWarningModal = function() {
+    const modal = document.getElementById("closed-warning-modal");
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    }
+};
+
+window.closeClosedWarningModal = function() {
+    const modal = document.getElementById("closed-warning-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+    }
+};
+
+window.confirmPreOrder = function() {
+    window.bypassClosedWarning = true;
+    closeClosedWarningModal();
+    const form = document.getElementById("whatsapp-order-form");
+    if (form) {
+        if (typeof form.requestSubmit === 'function') {
+            form.requestSubmit();
+        } else {
+            form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+    }
+};
+
 function renderProducts() {
     const container = document.getElementById("products-container");
+    if (!container) return;
     container.innerHTML = "";
     pizzas.forEach((pizza, index) => {
         const isEven = index % 2 === 1;
@@ -259,7 +449,7 @@ function renderProducts() {
                     <div class="border-t border-gondola-cardBorder/80 pt-4 space-y-3.5">
                         <div class="flex items-baseline justify-between gap-4">
                             <div class="text-xs text-gondola-muted font-medium">Preț: <span class="text-gondola-charcoal font-bold">${PRICE_PER_100G.toFixed(2)} LEI / 100g</span></div>
-                            <div class="text-right"><span class="text-[11px] text-gondola-muted block">${whole ? 'Estimativ:' : 'Subtotal:'}</span><span id="subtotal-${pizza.id}" class="text-xl md:text-2xl font-black text-gondola-primary font-display">${whole ? '≈ 64.00 LEI*' : money(estimatedPizzaPrice(grams)) + ' LEI'}</span></div>
+                            <div class="text-right"><span class="text-[11px] text-gondola-muted block">${whole ? 'Estimativ:' : 'Subtotal:'}</span><span id="subtotal-${pizza.id}" class="text-xl md:text-2xl font-black text-gondola-primary font-display">${whole ? '≈ 68.40 LEI*' : money(estimatedPizzaPrice(grams)) + ' LEI'}</span></div>
                         </div>
                         <div>
                             <div class="text-xs font-bold text-gondola-charcoal mb-1.5 flex justify-between items-center"><span>Alege porția:</span><span id="grams-label-${pizza.id}" class="text-gondola-primary font-black text-sm">${displaySelection(grams)}</span></div>
@@ -285,14 +475,6 @@ function renderProducts() {
     initLazyProductVideos();
 }
 
-/*
- * Control inteligent video produse:
- * - Flux unic activ: un singur video descarcă și rulează la un moment dat (zero congestie/freeze pe desktop);
- * - Prag 1 (Start la >= 50% vizibil): pornește după stabilizare la scroll (80ms);
- * - Prag 2 (Pauză la < 20% vizibil): se oprește păstrând secunda curentă (fără resetare/fără reload);
- * - La scroll up înapoi peste el, reia redarea lin exact de unde a rămas;
- * - Fără loop: la final îngheață pe ultimul cadru și afișează butonul elegant de Replay.
- */
 let productVideoObserver = null;
 let activePlayTimeout = null;
 
@@ -422,7 +604,6 @@ function initHeroVideoVisibility() {
         return;
     }
 
-    // Start video on interaction or after idle delay (protects initial LCP and FCP)
     const interactionEvents = ['scroll', 'touchstart', 'mousemove', 'keydown'];
     const onUserInteract = () => {
         interactionEvents.forEach(e => window.removeEventListener(e, onUserInteract));
@@ -474,11 +655,13 @@ window.setGrams = function(pizzaId, grams) {
     document.getElementById(`grams-label-${pizzaId}`)?.replaceChildren(document.createTextNode(displaySelection(grams)));
     document.getElementById(`counter-grams-${pizzaId}`)?.replaceChildren(document.createTextNode(`${grams}g`));
     const subtotal = document.getElementById(`subtotal-${pizzaId}`);
-    if (subtotal) subtotal.innerText = whole ? "≈ 64.00 LEI*" : `${money(estimatedPizzaPrice(grams))} LEI`;
+    if (subtotal) subtotal.innerText = whole ? "≈ 68.40 LEI*" : `${money(estimatedPizzaPrice(grams))} LEI`;
     document.getElementById(`whole-note-${pizzaId}`)?.classList.toggle('hidden', !whole);
     [300,600,1000,1200].forEach(p => document.getElementById(`btn-g-${pizzaId}-${p}`)?.classList.toggle('active', p === grams));
 };
+
 window.stepGrams = function(pizzaId, step) { setGrams(pizzaId, (selectedGrams[pizzaId] || 300) + step); };
+
 let addToCartCooldown = false;
 window.addToCart = function(pizzaId, evt) {
     if (addToCartCooldown) return;
@@ -513,22 +696,31 @@ window.removeCartItem = function(pizzaId) {
 };
 
 const resetConfirmModal = document.getElementById("reset-confirm-modal");
-window.openResetModal = function() { if (Object.keys(cart).length) { resetConfirmModal.classList.remove("hidden"); resetConfirmModal.classList.add("flex"); } };
+window.openResetModal = function() { 
+    if (Object.keys(cart).length || Object.values(drinkQuantities).some(q => q > 0) || Object.values(sauceQuantities).some(q => q > 0)) { 
+        resetConfirmModal.classList.remove("hidden"); 
+        resetConfirmModal.classList.add("flex"); 
+    } 
+};
 window.closeResetModal = function() { resetConfirmModal.classList.add("hidden"); resetConfirmModal.classList.remove("flex"); };
+
 window.confirmResetCart = function() {
     cart = {};
     Object.keys(sauceQuantities).forEach(name => sauceQuantities[name] = 0);
+    Object.keys(drinkQuantities).forEach(id => drinkQuantities[id] = 0);
     try {
         localStorage.removeItem(STORAGE_CART_KEY);
         localStorage.removeItem(STORAGE_SAUCES_KEY);
-        localStorage.removeItem("gondola_cutlery_v1");
+        localStorage.removeItem(STORAGE_DRINKS_KEY);
     } catch (_) {}
     renderSauceQuantities();
+    renderDrinkQuantities();
     updateCartUI();
     renderModalCart();
     closeResetModal();
     closeModal();
 };
+
 window.modifyCartItem = function(pizzaId, deltaGrams) {
     if (!cart[pizzaId]) return;
     cart[pizzaId] += deltaGrams;
@@ -545,7 +737,7 @@ function updateCartUI() {
     document.getElementById("cart-total-grams").innerText = grams;
     document.getElementById("cart-total-price").innerText = money(cartPizzaTotal());
     document.getElementById("cart-bar").classList.toggle("translate-y-full", distinctCount === 0);
-    if (!distinctCount) closeModal();
+    if (!distinctCount && !Object.values(drinkQuantities).some(q => q > 0)) closeModal();
 }
 
 const checkoutModal = document.getElementById("checkout-modal");
@@ -560,7 +752,7 @@ const deliveryZone = document.getElementById("delivery-zone");
 const orderSubmitBtn = document.getElementById("order-submit-btn");
 const orderSubmitHelp = document.getElementById("order-submit-help");
 
-openModalBtn.addEventListener("click", () => { renderModalCart(); checkoutModal.classList.remove("hidden"); checkoutModal.classList.add("flex"); });
+openModalBtn?.addEventListener("click", () => { renderModalCart(); checkoutModal.classList.remove("hidden"); checkoutModal.classList.add("flex"); });
 const cartBarInfo = document.getElementById("cart-bar")?.querySelector(".flex.items-center.gap-3");
 if (cartBarInfo) {
     cartBarInfo.classList.add("cursor-pointer");
@@ -571,15 +763,51 @@ if (cartBarInfo) {
         checkoutModal.classList.add("flex");
     });
 }
-function closeModal() { checkoutModal.classList.add("hidden"); checkoutModal.classList.remove("flex"); }
-closeModalBtn.addEventListener("click", closeModal);
-checkoutModal.addEventListener("click", e => { if (e.target === checkoutModal) closeModal(); });
-function syncDeliveryFields() { const isDelivery = typeDelivery.checked; deliveryFields.style.display = isDelivery ? "block" : "none"; address.required = isDelivery; renderModalCart(); }
-typeDelivery.addEventListener("change", syncDeliveryFields);
-typePickup.addEventListener("change", syncDeliveryFields);
-deliveryZone.addEventListener("change", renderModalCart);
+function closeModal() { checkoutModal?.classList.add("hidden"); checkoutModal?.classList.remove("flex"); }
+closeModalBtn?.addEventListener("click", closeModal);
+checkoutModal?.addEventListener("click", e => { if (e.target === checkoutModal) closeModal(); });
+
+function syncDeliveryFields() { 
+    const isDelivery = typeDelivery.checked; 
+    deliveryFields.style.display = isDelivery ? "block" : "none"; 
+    address.required = isDelivery; 
+    renderModalCart(); 
+}
+typeDelivery?.addEventListener("change", syncDeliveryFields);
+typePickup?.addEventListener("change", syncDeliveryFields);
+deliveryZone?.addEventListener("change", renderModalCart);
+
 document.querySelectorAll('.sauce-step').forEach(btn => {
     btn.addEventListener('click', () => stepSauce(btn.dataset.sauceName, Number(btn.dataset.sauceStep)));
+});
+
+function initScheduledTimeOptions() {
+    const sel = document.getElementById("scheduled-time");
+    if (!sel) return;
+    sel.innerHTML = "";
+    // Interval from 10:00 to 19:30 every 30 minutes
+    const times = [
+        "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
+        "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
+        "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
+        "19:00", "19:30"
+    ];
+    times.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = `Ora ${t}`;
+        sel.appendChild(opt);
+    });
+}
+
+function syncOrderTimeFields() {
+    const isScheduled = document.getElementById("time-scheduled")?.checked;
+    const wrap = document.getElementById("scheduled-time-wrap");
+    if (wrap) wrap.classList.toggle("hidden", !isScheduled);
+}
+
+document.querySelectorAll('input[name="order_time_type"]').forEach(r => {
+    r.addEventListener("change", syncOrderTimeFields);
 });
 
 function renderModalCart() {
@@ -593,9 +821,9 @@ function renderModalCart() {
         const isWholeMultiple = grams > WHOLE_PIZZA_REFERENCE_GRAMS && (grams % WHOLE_PIZZA_REFERENCE_GRAMS === 0);
         const wholeCount = isWholeMultiple ? (grams / WHOLE_PIZZA_REFERENCE_GRAMS) : 1;
         const portionLabel = isWholeSingle 
-            ? 'Pizza întreagă · ≈64.00 LEI*' 
+            ? 'Pizza întreagă · ≈68.40 LEI*' 
             : (isWholeMultiple 
-                ? `${wholeCount}x Pizza întreagă · ≈${money(wholeCount * 64)} LEI*` 
+                ? `${wholeCount}x Pizza întreagă · ≈${money(wholeCount * WHOLE_PIZZA_DISPLAY_PRICE)} LEI*` 
                 : `${grams}g · ${money(cost)} LEI`);
 
         const row = document.createElement("div");
@@ -615,27 +843,59 @@ function renderModalCart() {
             </div>`;
         container.appendChild(row);
     }
-    const pizzaTotal = cartPizzaTotal(), sauceTotal = saucesTotal(), grand = pizzaTotal + sauceTotal;
+    const pizzaTotal = cartPizzaTotal();
+    const sauceTotal = saucesTotal();
+    const drinkTotal = drinksTotal();
+    const boxesCount = cartBoxCount();
+    const boxTotal = cartBoxTotal();
+    const grand = estimatedGrandTotal();
+
     document.getElementById("modal-pizza-price").innerText = money(pizzaTotal);
     document.getElementById("modal-sauces-price").innerText = money(sauceTotal);
+    if (document.getElementById("modal-drinks-price")) {
+        document.getElementById("modal-drinks-price").innerText = money(drinkTotal);
+    }
+    if (document.getElementById("modal-boxes-price")) {
+        document.getElementById("modal-boxes-price").innerText = money(boxTotal);
+    }
+    if (document.getElementById("modal-boxes-count")) {
+        document.getElementById("modal-boxes-count").innerText = boxesCount;
+    }
     document.getElementById("modal-total-price").innerText = money(grand);
-    updateDeliveryProgress(grand);
-    updateOrderSubmitState(grand);
+    
+    updateDeliveryProgress(pizzaTotal);
+    updateOrderSubmitState(pizzaTotal);
 }
 
-function updateDeliveryProgress(total) {
-    const label = document.getElementById('delivery-progress-label'), value = document.getElementById('delivery-progress-value'), bar = document.getElementById('delivery-progress-bar');
-    if (typePickup.checked) { label.innerText = 'Ridicare personală · fără prag de livrare'; value.innerText = ''; bar.style.width='100%'; return; }
+function updateDeliveryProgress(pizzaTotal) {
+    const label = document.getElementById('delivery-progress-label');
+    const value = document.getElementById('delivery-progress-value');
+    const bar = document.getElementById('delivery-progress-bar');
+    if (!label || !value || !bar) return;
+
+    if (typePickup.checked) { 
+        label.innerText = 'Ridicare personală · fără prag minim de livrare'; 
+        value.innerText = ''; 
+        bar.style.width = '100%'; 
+        return; 
+    }
     const zone = deliveryZone.value || 'Piatra Neamț';
-    const threshold = zone === 'Piatra Neamț' ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
-    const remaining = Math.max(0, threshold-total);
-    const pct = Math.min(100, (total/threshold)*100);
+    const isPiatra = (zone === 'Piatra Neamț');
+    const threshold = isPiatra ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
+    const requiredPizzas = isPiatra ? "1 pizza întreagă" : "2 pizza întregi";
+    const remaining = Math.max(0, threshold - pizzaTotal);
+    const pct = Math.min(100, (pizzaTotal / threshold) * 100);
     bar.style.width = `${pct}%`;
-    if (remaining <= 0) { label.innerText = `✓ Livrare gratuită în ${zone}`; value.innerText = 'Prag atins'; }
-    else { label.innerText = `Încă ${money(remaining)} LEI până la livrare gratuită`; value.innerText = `${Math.round(pct)}%`; }
+    if (remaining <= 0) { 
+        label.innerText = `✓ Livrare gratuită în ${zone} (${requiredPizzas} atins)`; 
+        value.innerText = 'Prag atins'; 
+    } else { 
+        label.innerText = `Încă ${money(remaining)} LEI în pizza până la livrare gratuită (${requiredPizzas})`; 
+        value.innerText = `${Math.round(pct)}%`; 
+    }
 }
 
-function updateOrderSubmitState(total) {
+function updateOrderSubmitState(pizzaTotal) {
     if (!orderSubmitBtn || !orderSubmitHelp) return;
     if (typePickup.checked) {
         orderSubmitBtn.disabled = false;
@@ -645,22 +905,33 @@ function updateOrderSubmitState(total) {
     }
 
     const zone = deliveryZone.value || "Piatra Neamț";
-    const threshold = zone === "Piatra Neamț" ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
-    const remaining = Math.max(0, threshold - total);
-    const eligible = total >= threshold;
+    const isPiatra = (zone === "Piatra Neamț");
+    const threshold = isPiatra ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
+    const requiredText = isPiatra ? "1 pizza întreagă (~68 LEI)" : "2 pizza întregi (~137 LEI)";
+    const remaining = Math.max(0, threshold - pizzaTotal);
+    const eligible = pizzaTotal >= threshold;
 
     orderSubmitBtn.disabled = !eligible;
     orderSubmitBtn.setAttribute("aria-disabled", String(!eligible));
     if (eligible) {
-        orderSubmitHelp.textContent = `Comanda îndeplinește pragul minim pentru livrare în ${zone}.`;
+        orderSubmitHelp.textContent = `Comanda îndeplinește pragul minim pentru livrare în ${zone} (${requiredText}).`;
     } else {
-        orderSubmitHelp.textContent = `Comandă minimă pentru livrare în ${zone}: ${money(threshold)} LEI · mai adaugă ${money(remaining)} LEI.`;
+        orderSubmitHelp.textContent = `Comandă minimă pentru livrare în ${zone}: ${requiredText} · mai adaugă pizza de ${money(remaining)} LEI.`;
     }
 }
 
-orderForm.addEventListener("submit", e => {
+orderForm?.addEventListener("submit", e => {
     e.preventDefault();
     if (!Object.keys(cart).length) return alert("Te rugăm să alegi cel puțin un sortiment de pizza în comandă.");
+    
+    // Check if open or show warning
+    const sched = getPizzeriaScheduleStatus();
+    if (!sched.isOpen && !window.bypassClosedWarning) {
+        openClosedWarningModal();
+        return;
+    }
+    window.bypassClosedWarning = false;
+
     const name = document.getElementById("cust-name").value.trim();
     const type = document.querySelector('input[name="order_type"]:checked').value;
     const payment = document.querySelector('input[name="payment"]:checked').value;
@@ -668,42 +939,79 @@ orderForm.addEventListener("submit", e => {
     const zone = deliveryZone.value;
     const addr = address.value.trim();
     const sauces = selectedSauces();
-    const currentTotal = estimatedGrandTotal();
+    const drinks = selectedDrinks();
+    const boxes = cartBoxCount();
+    const boxCost = cartBoxTotal();
+    const pizzaTotal = cartPizzaTotal();
+    const sauceTotal = saucesTotal();
+    const drinkTotal = drinksTotal();
+    const grand = estimatedGrandTotal();
+
+    const timeType = document.querySelector('input[name="order_time_type"]:checked')?.value || "asap";
+    let timeText = "Cât mai repede (~35-50 min)";
+    if (timeType === "scheduled") {
+        const selTime = document.getElementById("scheduled-time")?.value || "13:00";
+        timeText = `Comandă programată pentru ora ${selTime}`;
+    }
+
     if (type === 'Livrare la domiciliu') {
         const threshold = zone === 'Piatra Neamț' ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
-        if (currentTotal < threshold) {
-            updateOrderSubmitState(currentTotal);
+        if (pizzaTotal < threshold) {
+            updateOrderSubmitState(pizzaTotal);
             return;
         }
     }
+
     let itemsText = "", totalGrams = 0;
     for (const id in cart) {
         const pizza = pizzas.find(p => p.id == id), grams = cart[id], price = estimatedPizzaPrice(grams);
         if (!pizza) continue;
         totalGrams += grams;
         if (grams === WHOLE_PIZZA_REFERENCE_GRAMS) {
-            itemsText += `• ${pizza.name} — Pizza întreagă (≈64 LEI*)\n`;
+            itemsText += `• ${pizza.name} — Pizza întreagă (≈68.40 LEI*)\n`;
         } else if (grams > WHOLE_PIZZA_REFERENCE_GRAMS && grams % WHOLE_PIZZA_REFERENCE_GRAMS === 0) {
             const count = grams / WHOLE_PIZZA_REFERENCE_GRAMS;
-            itemsText += `• ${pizza.name} — ${count}x Pizza întreagă (≈${money(count * 64)} LEI*)\n`;
+            itemsText += `• ${pizza.name} — ${count}x Pizza întreagă (≈${money(count * WHOLE_PIZZA_DISPLAY_PRICE)} LEI*)\n`;
         } else {
             itemsText += `• ${pizza.name} — ${grams}g (${money(price)} LEI)\n`;
         }
     }
-    const pizzaTotal=cartPizzaTotal(), sauceTotal=saucesTotal(), grand=pizzaTotal+sauceTotal;
+
     let deliveryStatus = 'Ridicare personală';
-    if (type === 'Livrare la domiciliu') { const threshold=zone==='Piatra Neamț'?PIATRA_FREE_DELIVERY_MIN:OUTSIDE_FREE_DELIVERY_MIN; deliveryStatus = grand >= threshold ? 'Livrare gratuită' : (zone==='Piatra Neamț' ? `Sub pragul orientativ de ${threshold} LEI` : 'Cost livrare de confirmat'); }
+    if (type === 'Livrare la domiciliu') { 
+        const threshold = zone === 'Piatra Neamț' ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN; 
+        deliveryStatus = pizzaTotal >= threshold ? 'Livrare gratuită (prag atins)' : (zone === 'Piatra Neamț' ? 'Sub pragul de 1 pizza' : 'Cost livrare de confirmat'); 
+    }
+
     let message = `🍕 *COMANDĂ NOUĂ - PIZZERIA GONDOLA*\n📍 *B-dul Decebal nr. 35, Piatra Neamț*\n--------------------------------------\n${itemsText}`;
+    
     if (sauces.length) {
         const saucesText = sauces.map(sauce => `${sauce.quantity}× ${sauce.name} (~70g)`).join(', ');
         message += `\n🥫 *Sosuri:* ${saucesText} (${money(sauceTotal)} LEI)\n`;
     }
-    message += `--------------------------------------\n⚖️ *Gramaj estimativ:* ${totalGrams} g\n💰 *Pizza:* ${money(pizzaTotal)} LEI\n🥫 *Sosuri:* ${money(sauceTotal)} LEI\n💳 *Total estimativ:* ${money(grand)} LEI\n`;
+
+    if (drinks.length) {
+        const drinksText = drinks.map(d => `${d.quantity}× ${d.name}`).join(', ');
+        message += `\n🥤 *Băuturi:* ${drinksText} (${money(drinkTotal)} LEI)\n`;
+    }
+
+    if (boxes > 0) {
+        message += `📦 *Ambalaj cutii:* ${boxes} cutie/cutii (${money(boxCost)} LEI - 1 LEU/buc.)\n`;
+    }
+
+    message += `--------------------------------------\n⚖️ *Gramaj pizza:* ${totalGrams} g\n💰 *Pizza:* ${money(pizzaTotal)} LEI\n`;
+    if (sauceTotal > 0) message += `🥫 *Sosuri:* ${money(sauceTotal)} LEI\n`;
+    if (drinkTotal > 0) message += `🥤 *Băuturi:* ${money(drinkTotal)} LEI\n`;
+    message += `📦 *Ambalaj cutii:* ${money(boxCost)} LEI\n`;
+    message += `💳 *Total estimativ:* ${money(grand)} LEI\n`;
     message += `\n👤 *Client:* ${name}\n🚗 *Primire:* ${type}\n`;
     if (type === 'Livrare la domiciliu') message += `📌 *Zona:* ${zone}\n🏠 *Adresă:* ${addr}\n🚚 *Livrare:* ${deliveryStatus}\n`;
+    message += `🕒 *Timp dorit:* ${timeText}\n`;
     message += `💵 *Plată:* ${payment}\n`;
     if (notes) message += `📝 *Mențiuni:* ${notes}\n`;
-    message += `\n*Notă:* Pentru pizza întreagă, prețul este orientativ; greutatea reală poate varia cu aproximativ ±100g, iar prețul final se confirmă după cântărire.`;
+    if (!sched.isOpen) message += `⚠️ *Notă:* Comandă plasată în afara programului cuptorului (pre-comandă).\n`;
+    message += `\n*Notă:* Pentru pizza întreagă, prețul este orientativ (5,70 LEI/100g); greutatea reală poate varia cu aprox. ±100g, iar prețul final se confirmă pe bonul fiscal după cântărire.`;
+
     window.open(`https://wa.me/${PIZZERIA_WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank");
 });
 
@@ -711,8 +1019,14 @@ document.addEventListener("DOMContentLoaded", () => {
     loadCartFromStorage();
     renderProducts();
     renderSauceQuantities();
+    renderDrinkQuantities();
+    initScheduledTimeOptions();
     syncDeliveryFields();
+    syncOrderTimeFields();
     updateCartUI();
+    updateLiveScheduleBadge();
+    setInterval(updateLiveScheduleBadge, 60000);
+
     // Start hero video after first render so network is 100% available for LCP
     if ("requestIdleCallback" in window) {
         requestIdleCallback(initHeroVideoVisibility);
