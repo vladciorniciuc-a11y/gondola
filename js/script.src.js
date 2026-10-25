@@ -362,10 +362,10 @@ function getPizzeriaScheduleStatus() {
             badgeClass = "bg-amber-50 text-amber-900 border-amber-300";
         } else {
             statusText = "Deschis acum • Comenzi până la 19:30";
-            badgeClass = "bg-emerald-50 text-emerald-900 border-emerald-300";
+            badgeClass = "bg-emerald-50 text-emerald-800 border-emerald-200";
         }
     } else {
-        badgeClass = "bg-rose-50 text-rose-900 border-rose-200";
+        badgeClass = "bg-rose-50 text-rose-800 border-rose-200";
         if (currentMinuteTotal < openMinuteTotal) {
             // Este dimineață înainte de ora deschiderii de azi
             const todayOpenHourStr = isSunday ? "10:00" : "09:00";
@@ -399,8 +399,8 @@ function updateLiveScheduleBadge() {
         const dotColor = sched.isOpen 
             ? (sched.isClosingSoon ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500 animate-pulse') 
             : 'bg-rose-500';
-        badge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full mr-1.5 ${dotColor}"></span>${sched.statusText}`;
-        badge.className = `inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold border transition ${sched.badgeClass}`;
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full shrink-0 ${dotColor}"></span><span>${sched.statusText}</span>`;
+        badge.className = `inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold border transition ${sched.badgeClass}`;
     }
 }
 
