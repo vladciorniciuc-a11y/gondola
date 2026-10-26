@@ -406,7 +406,7 @@ def generate_back_flyer():
 
     # Col 3: Ambalaj & Notă SGR
     draw.text((1650, extra_y + 64), '• Ambalaj cutie pizza:', fill=(255, 230, 190, 255), font=f_card_bold)
-    draw.text((2010, extra_y + 64), '1,00 LEU / buc.', fill=(245, 185, 60, 255), font=f_card_bold)
+    draw.text((2010, extra_y + 64), '2,00 LEI / buc.', fill=(245, 185, 60, 255), font=f_card_bold)
     draw.text((1650, extra_y + 104), '*Prețul băuturilor include garanția SGR (0,50 LEI).', fill=(200, 195, 185, 255), font=f_card_body)
     draw.text((1650, extra_y + 144), 'Pizza se livrează caldă, proaspătă din cuptor!', fill=(0, 200, 100, 255), font=f_card_bold)
 

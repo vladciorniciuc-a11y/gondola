@@ -2,7 +2,7 @@ const PRICE_PER_100G = 5.70;
 const WHOLE_PIZZA_REFERENCE_GRAMS = 1200;
 const WHOLE_PIZZA_DISPLAY_PRICE = 68.40;
 const MIN_GRAMS_PER_ITEM = 300;
-const BOX_PRICE = 1.00;
+const BOX_PRICE = 2.00;
 const PIZZERIA_WHATSAPP = "40747216161";
 const PIATRA_FREE_DELIVERY_MIN = 68.40; // 1 pizza întreagă
 const OUTSIDE_FREE_DELIVERY_MIN = 136.80; // 2 pizza întregi
@@ -1240,7 +1240,7 @@ orderForm?.addEventListener("submit", e => {
     }
 
     if (boxes > 0) {
-        message += `📦 *Ambalaj cutii:* ${boxes} cutie/cutii (${money(boxCost)} LEI - 1 LEU/buc.)\n`;
+        message += `📦 *Ambalaj cutii:* ${boxes} cutie/cutii (${money(boxCost)} LEI - 2 LEI/buc.)\n`;
     }
 
     message += `--------------------------------------\n⚖️ *Gramaj pizza:* ${totalGrams} g\n💰 *Pizza:* ${money(pizzaTotal)} LEI\n`;
