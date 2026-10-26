@@ -1115,10 +1115,10 @@ function updateDeliveryProgress(pizzaTotal) {
     const pct = Math.min(100, (pizzaTotal / threshold) * 100);
     bar.style.width = `${pct}%`;
     if (remaining <= 0) { 
-        label.innerText = `✓ Livrare gratuită în ${zone} (${requiredPizzas} atins)`; 
-        value.innerText = 'Prag atins'; 
+        label.innerText = `✓ Livrare gratuită în ${zone} (condiție de ${requiredPizzas} atinsă – fără taxă de transport)`; 
+        value.innerText = 'Conditie indeplinita'; 
     } else { 
-        label.innerText = `Încă ${money(remaining)} LEI în pizza până la livrare gratuită (${requiredPizzas})`; 
+        label.innerText = `Încă ${money(remaining)} LEI în pizza pentru livrare gratuită (${requiredPizzas})`; 
         value.innerText = `${Math.round(pct)}%`; 
     }
 }
@@ -1128,7 +1128,7 @@ function updateOrderSubmitState(pizzaTotal) {
     if (typePickup.checked) {
         orderSubmitBtn.disabled = false;
         orderSubmitBtn.removeAttribute("aria-disabled");
-        orderSubmitHelp.textContent = "Ridicare personală: nu se aplică pragul minim pentru livrare.";
+        orderSubmitHelp.textContent = "Ridicare personală: nu este condiționată de o comandă minimă.";
         return;
     }
 
@@ -1142,9 +1142,9 @@ function updateOrderSubmitState(pizzaTotal) {
     orderSubmitBtn.disabled = !eligible;
     orderSubmitBtn.setAttribute("aria-disabled", String(!eligible));
     if (eligible) {
-        orderSubmitHelp.textContent = `Comanda îndeplinește pragul minim pentru livrare în ${zone} (${requiredText}).`;
+        orderSubmitHelp.textContent = `Comanda îndeplinește condiția de livrare gratuită în ${zone} (${requiredText}). Nu percepem taxă de transport.`;
     } else {
-        orderSubmitHelp.textContent = `Comandă minimă pentru livrare în ${zone}: ${requiredText} · mai adaugă pizza de ${money(remaining)} LEI.`;
+        orderSubmitHelp.textContent = `Livrarea în ${zone} este condiționată de minimum ${requiredText} (nu percepem taxă de transport). Mai adaugă pizza de ${money(remaining)} LEI sau alege Ridicare personală.`;
     }
 }
 
@@ -1224,7 +1224,7 @@ orderForm?.addEventListener("submit", e => {
     let deliveryStatus = 'Ridicare personală';
     if (type === 'Livrare la domiciliu') { 
         const threshold = zone === 'Piatra Neamț' ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN; 
-        deliveryStatus = pizzaTotal >= threshold ? 'Livrare gratuită (prag atins)' : (zone === 'Piatra Neamț' ? 'Sub pragul de 1 pizza' : 'Cost livrare de confirmat'); 
+        deliveryStatus = 'Livrare gratuită (fără taxă transport — condiție de ' + (isPiatra ? '1 pizza' : '2 pizza') + ' atinsă)'; 
     }
 
     let message = `🍕 *COMANDĂ NOUĂ - PIZZERIA GONDOLA*\n📍 *B-dul Decebal nr. 35, Piatra Neamț*\n--------------------------------------\n${itemsText}`;

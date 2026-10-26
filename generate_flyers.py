@@ -190,7 +190,7 @@ def generate_front_flyer():
     draw_icon_truck(draw, 1850, 2285)
     draw.text((1905, 2225), 'Livrare:', fill=(170, 170, 170, 255), font=f_footer_lbl)
     draw.text((1905, 2265), 'Gratuită*', fill=(255, 255, 255, 255), font=f_footer_val)
-    draw.text((1905, 2320), '*(vezi condițiile pe verso / site)', fill=(245, 185, 60, 255), font=f_footer_sub)
+    draw.text((1905, 2320), '*(condiție: 1 pizza oraș / 2 în jur)', fill=(245, 185, 60, 255), font=f_footer_sub)
 
     # --- QR BADGE ---
     b_radius = 255
@@ -430,29 +430,29 @@ def generate_back_flyer():
         d.line((cx-7, cy, cx-1, cy+6), fill=(255, 255, 255, 255), width=3)
         d.line((cx-1, cy+6, cx+7, cy-5), fill=(255, 255, 255, 255), width=3)
 
-    # Column 1: Piatra Neamț (Updated: min 1 pizza întreagă ~68 LEI)
+    # Column 1: Piatra Neamț (Condiționată de min. 1 pizza întreagă ~68 LEI - FĂRĂ TAXĂ TRANSPORT)
     draw.text((d_col1_x, deliv_y + 76), 'MUNICIPIUL PIATRA NEAMȚ', fill=(255, 255, 255, 255), font=f_card_h)
     draw_check_circle(draw, d_col1_x + 14, deliv_y + 138)
-    draw.text((d_col1_x + 40, deliv_y + 124), 'LIVRARE GRATUITĂ:', fill=(0, 200, 100, 255), font=f_card_bold)
-    draw.text((d_col1_x + 310, deliv_y + 124), 'comenzi de minimum 1 pizza întreagă (~68 LEI)', fill=(245, 185, 60, 255), font=f_card_bold)
-    draw.text((d_col1_x + 40, deliv_y + 165), '(echivalentul a cel puțin o pizza întreagă de ~1.200g)', fill=(210, 205, 195, 255), font=f_card_body)
-    draw.text((d_col1_x, deliv_y + 215), '• Comenzi sub pragul de 68 LEI (ex. felie 300g):', fill=(255, 220, 180, 255), font=f_card_bold)
-    draw.text((d_col1_x + 20, deliv_y + 252), 'Opțiune de Ridicare Personală de la pizzerie sau cost', fill=(200, 195, 185, 255), font=f_card_body)
-    draw.text((d_col1_x + 20, deliv_y + 284), 'de transport confirmat telefonic înainte de expediere.', fill=(200, 195, 185, 255), font=f_card_body)
+    draw.text((d_col1_x + 40, deliv_y + 124), 'LIVRARE FĂRĂ TAXĂ:', fill=(0, 200, 100, 255), font=f_card_bold)
+    draw.text((d_col1_x + 350, deliv_y + 124), 'condiționată de min. 1 pizza întreagă', fill=(245, 185, 60, 255), font=f_card_bold)
+    draw.text((d_col1_x + 40, deliv_y + 165), '(comenzi de minimum aprox. 68 LEI / pizza de ~1.200g)', fill=(210, 205, 195, 255), font=f_card_body)
+    draw.text((d_col1_x, deliv_y + 215), '• Nu percepem taxă de transport!', fill=(255, 220, 180, 255), font=f_card_bold)
+    draw.text((d_col1_x + 20, deliv_y + 252), 'Livrarea în oraș se efectuează exclusiv de la 1 pizza întreagă.', fill=(200, 195, 185, 255), font=f_card_body)
+    draw.text((d_col1_x + 20, deliv_y + 284), 'Pentru porții mai mici (felii 300g): Ridicare personală din pizzerie.', fill=(200, 195, 185, 255), font=f_card_body)
     draw.text((d_col1_x, deliv_y + 332), '• Timp mediu livrare: 30 – 50 min. • Plată card (POS) sau cash la livrare', fill=(245, 185, 60, 255), font=f_card_bold)
 
-    # Column 2: Zone Limitrofe (Updated: min 2 pizza întregi ~137 LEI)
+    # Column 2: Zone Limitrofe (Condiționată de min. 2 pizza întregi ~137 LEI - FĂRĂ TAXĂ TRANSPORT)
     draw.text((d_col2_x, deliv_y + 76), 'ZONE LIMITROFE (COMUNE & ÎMPREJURIMI)', fill=(255, 255, 255, 255), font=f_card_h)
     draw_check_circle(draw, d_col2_x + 14, deliv_y + 138)
-    draw.text((d_col2_x + 40, deliv_y + 124), 'LIVRARE GRATUITĂ:', fill=(0, 200, 100, 255), font=f_card_bold)
-    draw.text((d_col2_x + 310, deliv_y + 124), 'comenzi de minimum 2 pizza întregi (~137 LEI)', fill=(245, 185, 60, 255), font=f_card_bold)
-    draw.text((d_col2_x, deliv_y + 168), '• Localități deservite cu livrare la domiciliu:', fill=(255, 220, 180, 255), font=f_card_bold)
+    draw.text((d_col2_x + 40, deliv_y + 124), 'LIVRARE FĂRĂ TAXĂ:', fill=(0, 200, 100, 255), font=f_card_bold)
+    draw.text((d_col2_x + 350, deliv_y + 124), 'condiționată de min. 2 pizza întregi', fill=(245, 185, 60, 255), font=f_card_bold)
+    draw.text((d_col2_x + 40, deliv_y + 165), '(comenzi de minimum aprox. 137 LEI)', fill=(210, 205, 195, 255), font=f_card_body)
+    draw.text((d_col2_x, deliv_y + 205), '• Localități deservite cu livrare la domiciliu:', fill=(255, 220, 180, 255), font=f_card_bold)
     localities_l1 = 'Dumbrava Roșie • Văleni • Săvinești (Pasarelă) • Bisericani'
     localities_l2 = 'Gârcina (Școală) • Girov (Kober) • Bistrița • Alexandru cel Bun • Speranța'
-    draw.text((d_col2_x + 20, deliv_y + 206), localities_l1, fill=(245, 185, 60, 255), font=f_card_bold)
-    draw.text((d_col2_x + 20, deliv_y + 242), localities_l2, fill=(245, 185, 60, 255), font=f_card_bold)
-    draw.text((d_col2_x, deliv_y + 288), '• Sub pragul de 137 LEI: costul livrării se confirmă telefonic', fill=(200, 195, 185, 255), font=f_card_body)
-    draw.text((d_col2_x + 20, deliv_y + 322), 'înainte de plecarea curierului de la pizzerie.', fill=(200, 195, 185, 255), font=f_card_body)
+    draw.text((d_col2_x + 20, deliv_y + 240), localities_l1, fill=(245, 185, 60, 255), font=f_card_bold)
+    draw.text((d_col2_x + 20, deliv_y + 274), localities_l2, fill=(245, 185, 60, 255), font=f_card_bold)
+    draw.text((d_col2_x, deliv_y + 318), '• Livrare condiționată de 2 pizza (nu se livrează sub 2 pizza).', fill=(200, 195, 185, 255), font=f_card_body)
 
     # --- 5. FOOTER BAR (Updated schedule: L-S: 09:00 - 20:00 | D: 10:00 - 20:00 | Ultima comandă: 19:30) ---
     foot_y = deliv_y + deliv_h + 20
