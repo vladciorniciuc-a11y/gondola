@@ -492,9 +492,20 @@ window.closeClosedWarningModal = function() {
 };
 
 
-window.openOrderSuccessModal = function() {
+window.openOrderSuccessModal = function(waUrl) {
     const modal = document.getElementById("order-success-modal");
     if (modal) {
+        const retryBtn = document.getElementById("order-success-wa-retry");
+        if (retryBtn) {
+            if (waUrl) {
+                retryBtn.href = waUrl;
+                retryBtn.classList.remove("hidden");
+                retryBtn.classList.add("inline-flex");
+            } else {
+                retryBtn.classList.add("hidden");
+                retryBtn.classList.remove("inline-flex");
+            }
+        }
         modal.classList.remove("hidden");
         modal.classList.add("flex");
     }
@@ -505,6 +516,11 @@ window.closeOrderSuccessModal = function() {
     if (modal) {
         modal.classList.add("hidden");
         modal.classList.remove("flex");
+        const retryBtn = document.getElementById("order-success-wa-retry");
+        if (retryBtn) {
+            retryBtn.classList.add("hidden");
+            retryBtn.classList.remove("inline-flex");
+        }
     }
 };
 
@@ -1181,6 +1197,7 @@ orderForm?.addEventListener("submit", e => {
     const payment = document.querySelector('input[name="payment"]:checked').value;
     const notes = document.getElementById("cust-notes").value.trim();
     const zone = deliveryZone.value;
+    const isPiatra = (zone === 'Piatra Neamț');
     const addr = address.value.trim();
     const sauces = selectedSauces();
     const drinks = selectedDrinks();
@@ -1199,7 +1216,7 @@ orderForm?.addEventListener("submit", e => {
     }
 
     if (type === 'Livrare la domiciliu') {
-        const threshold = zone === 'Piatra Neamț' ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
+        const threshold = isPiatra ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
         if (pizzaTotal < threshold) {
             updateOrderSubmitState(pizzaTotal);
             return;
@@ -1258,9 +1275,38 @@ orderForm?.addEventListener("submit", e => {
 
     saveCustomerData();
     closeModal();
-    window.open(`https://wa.me/${PIZZERIA_WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank");
-    openOrderSuccessModal();
+
+    const waUrl = `https://wa.me/${PIZZERIA_WHATSAPP}?text=${encodeURIComponent(message)}`;
+    let opened = false;
+    try {
+        const newWin = window.open(waUrl, "_blank");
+        if (newWin && !newWin.closed && typeof newWin.closed !== "undefined") {
+            opened = true;
+        }
+    } catch (_) {
+        opened = false;
+    }
+
+    if (!opened) {
+        window.location.href = waUrl;
+    }
+
+    openOrderSuccessModal(waUrl);
 });
+
+document.getElementById("order-submit-wrap")?.addEventListener("click", () => {
+    if (orderSubmitBtn && orderSubmitBtn.disabled) {
+        const zone = deliveryZone?.value || "Piatra Neamț";
+        const isPiatra = (zone === "Piatra Neamț");
+        const threshold = isPiatra ? PIATRA_FREE_DELIVERY_MIN : OUTSIDE_FREE_DELIVERY_MIN;
+        const requiredText = isPiatra ? "1 pizza întreagă (~68 LEI)" : "2 pizza întregi (~137 LEI)";
+        const pizzaTotal = cartPizzaTotal();
+        const remaining = Math.max(0, threshold - pizzaTotal);
+
+        alert(`Livrarea la domiciliu în ${zone} este condiționată de minimum ${requiredText} (fără taxă de transport).\n\nMai adaugă pizza de ${money(remaining)} LEI sau comută pe opțiunea „Ridicare personală” (fără prag minim).`);
+    }
+});
+
 
 document.addEventListener("DOMContentLoaded", () => {
     loadCartFromStorage();

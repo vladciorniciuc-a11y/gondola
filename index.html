@@ -1635,9 +1635,11 @@ body {
                         </p>
                     </div>
 
-                    <button id="order-submit-btn" type="submit" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none disabled:cursor-not-allowed disabled:hover:bg-slate-300 text-white font-black py-3.5 rounded-xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition text-base uppercase font-display tracking-wider">
-                        <svg class="icon text-2xl" aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Trimite comanda pe WhatsApp
-                    </button>
+                    <div id="order-submit-wrap" class="relative cursor-pointer">
+                        <button id="order-submit-btn" type="submit" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none disabled:cursor-not-allowed disabled:hover:bg-slate-300 disabled:pointer-events-none text-white font-black py-3.5 rounded-xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition text-base uppercase font-display tracking-wider">
+                            <svg class="icon text-2xl" aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Trimite comanda pe WhatsApp
+                        </button>
+                    </div>
                     <p id="order-submit-help" class="text-[11px] text-gondola-muted text-center">Pentru livrare gratuită în Piatra Neamț este necesară minim 1 pizza întreagă (~68 LEI).</p>
                 </form>
             </div>
@@ -1705,6 +1707,9 @@ body {
             <p class="text-xs text-gondola-muted mb-4 leading-relaxed">
                 Comanda ta a fost direcționată pe WhatsApp. Colegii noștri de la <strong>Pizzeria Gondola</strong> îți vor confirma prețul și timpul de livrare în câteva minute.
             </p>
+            <a id="order-success-wa-retry" href="#" target="_blank" rel="noopener noreferrer" class="hidden mb-4 items-center justify-center gap-2 w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md shadow-emerald-600/30 transition">
+                <svg class="icon text-base" aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Deschide WhatsApp (dacă nu s-a deschis automat)
+            </a>
             <div class="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-3.5 mb-5 text-left">
                 <div class="flex items-center gap-1.5 mb-1">
                     <span class="text-amber-500 text-sm">⭐⭐⭐⭐⭐</span>
